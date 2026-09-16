@@ -153,8 +153,20 @@ class SurveyParams:
     """"adaptive" (tuned on smooth concrete) or "blackhat" (rough real surfaces; see
     segment._blackhat_binary). The default is unchanged so every published synthetic
     number still holds."""
-    blackhat_seed_sigma: float = 6.0
+    blackhat_seed_sigma: float = 5.0
     """Seed threshold for "blackhat", in robust standard deviations of the response."""
+    blackhat_min_contrast_sigma: float = 4.0
+    """"blackhat" only: a candidate's mean black-hat response must sit this many robust
+    standard deviations of the response above its median. Replaces `min_contrast_sigma`,
+    whose adaptive-residual sigma rejects every real crack on a rough surface."""
+    blackhat_min_elongation: float = 1.0
+    """"blackhat" only: bounding-box elongation floor (replaces `min_elongation`)."""
+    blackhat_min_length_widths: float = 20.0
+    """"blackhat" only: shortest crack kept, in expected crack widths (replaces
+    `min_length_mm`, so the filter does not depend on the scale)."""
+    blackhat_max_width_ratio: float = 5.0
+    """"blackhat" only: widest mean width kept, as a multiple of the expected width
+    (replaces `max_mean_width_mm`)."""
     keep_edge_cracks: bool = False
     """For stills where the crack runs out of the frame. A band along the frame edge is
     blanked before crack finding, so a crack that leaves the frame is measured on its
@@ -237,6 +249,10 @@ class SurveyParams:
             "keep_edge_cracks": self.keep_edge_cracks,
             "segmentation": self.segmentation,
             "blackhat_seed_sigma": self.blackhat_seed_sigma,
+            "blackhat_min_contrast_sigma": self.blackhat_min_contrast_sigma,
+            "blackhat_min_elongation": self.blackhat_min_elongation,
+            "blackhat_min_length_widths": self.blackhat_min_length_widths,
+            "blackhat_max_width_ratio": self.blackhat_max_width_ratio,
             "manual_scale_max_tilt_deg": self.manual_scale_max_tilt_deg,
             "exclude_regions": [[list(pt) for pt in poly] for poly in self.exclude_regions],
             "frame_stride": self.frame_stride,
@@ -295,8 +311,12 @@ class SurveyParams:
             if params["segmentation"] not in ("adaptive", "blackhat"):
                 raise ValueError("segmentation must be 'adaptive' or 'blackhat'")
             known["segmentation"] = params["segmentation"]
-        if params.get("blackhat_seed_sigma") is not None:
-            known["blackhat_seed_sigma"] = float(params["blackhat_seed_sigma"])
+        for key in (
+            "blackhat_seed_sigma", "blackhat_min_contrast_sigma", "blackhat_min_elongation",
+            "blackhat_min_length_widths", "blackhat_max_width_ratio",
+        ):
+            if params.get(key) is not None:
+                known[key] = float(params[key])
         if params.get("keep_edge_cracks") is not None:
             known["keep_edge_cracks"] = bool(params["keep_edge_cracks"])
         if params.get("manual_scale") is not None:

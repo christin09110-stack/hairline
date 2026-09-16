@@ -229,11 +229,22 @@ def skeleton_of(mask: np.ndarray, dist: np.ndarray | None = None) -> np.ndarray:
     return ridge.astype(np.uint8)
 
 
+@dataclass
+class _BlackhatResponse:
+    response: np.ndarray
+    """Black-hat of the lightly blurred grey image, float32, grey levels."""
+    centre: float
+    spread: float
+    """Median and robust spread of the response over the surface actually shown. The
+    blackhat contrast filter measures candidates in these units."""
+
+
 def _blackhat_binary(
     gray: np.ndarray,
     expected_px: float,
     params: SurveyParams,
     exclude_polygons: list[np.ndarray] | None,
+    stats_out: list | None = None,
 ) -> np.ndarray:
     """Dark thin structure on rough real surfaces: black-hat, then hysteresis.
 
@@ -265,6 +276,8 @@ def _blackhat_binary(
     body = values[values < np.percentile(values, 95)]
     spread = float(np.std(body)) if body.size else 1.0
     spread = max(spread, 1.0)
+    if stats_out is not None:
+        stats_out.append(_BlackhatResponse(response=response, centre=centre, spread=spread))
     strong = (response > centre + params.blackhat_seed_sigma * spread) & valid
     weak = (response > centre + 0.5 * params.blackhat_seed_sigma * spread) & valid
     n, labels, _, _ = cv2.connectedComponentsWithStats(weak.astype(np.uint8), 8)
@@ -307,8 +320,10 @@ def segment_cracks(
         else np.clip(params.threshold_k * residual_sigma, 3.0, 45.0)
     )
 
-    if params.segmentation == "blackhat":
-        binary = _blackhat_binary(gray, expected_px, params, exclude_polygons)
+    blackhat = params.segmentation == "blackhat"
+    bh_stats: list[_BlackhatResponse] = []
+    if blackhat:
+        binary = _blackhat_binary(gray, expected_px, params, exclude_polygons, bh_stats)
     else:
         binary = cv2.adaptiveThreshold(
             gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, block, threshold_c
@@ -350,12 +365,22 @@ def segment_cracks(
     kept: list[Component] = []
     min_length_px = params.min_length_mm * px_per_mm
     max_mean_width_px = params.max_mean_width_mm * px_per_mm
+    min_area_px: float = params.min_component_area_px
+    min_elongation = params.min_elongation
+    if blackhat:
+        # The mm-valued filters above were set on synthetic concrete at one stand-off.
+        # On real photographs they are expressed in crack widths instead, so the same
+        # numbers hold whatever the scale (eval/real_dev/README.md records the tuning).
+        min_length_px = params.blackhat_min_length_widths * expected_px
+        max_mean_width_px = params.blackhat_max_width_ratio * expected_px
+        min_area_px = 0.5 * min_length_px * expected_px
+        min_elongation = params.blackhat_min_elongation
 
     ring = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (max(5, _odd(expected_px * 5, 5)),) * 2)
 
     for label in range(1, count):
         x, y, bw, bh, area = (int(v) for v in stats[label])
-        if area < params.min_component_area_px:
+        if area < min_area_px:
             rejected["area"] += 1
             continue
         # A component running off the edge of the frame has an unknown extent and
@@ -368,7 +393,7 @@ def segment_cracks(
             continue
         elongation = max(bw, bh) / max(1.0, min(bw, bh))
         diagonal = float(np.hypot(bw, bh))
-        if elongation < params.min_elongation and diagonal < 3 * min_length_px:
+        if elongation < min_elongation and diagonal < 3 * min_length_px:
             rejected["elongation"] += 1
             continue
 
@@ -385,13 +410,34 @@ def segment_cracks(
         inside_mean = float(cv2.mean(sub_gray, comp)[0])
         outside_mean = float(cv2.mean(sub_gray, surround)[0])
         contrast = outside_mean - inside_mean
-        if contrast < max(params.min_contrast_dn, params.min_contrast_sigma * residual_sigma):
+        if blackhat:
+            # Against the black-hat response's own spread, not the adaptive residual: the
+            # residual sigma comes from a block tuned for smooth concrete and on a rough
+            # surface it is large enough to reject every real crack.
+            resp = bh_stats[0]
+            inside_response = float(cv2.mean(resp.response[y0:y1, x0:x1], comp)[0])
+            passes = (
+                contrast >= params.min_contrast_dn
+                and (inside_response - resp.centre) / resp.spread
+                >= params.blackhat_min_contrast_sigma
+            )
+        else:
+            passes = contrast >= max(
+                params.min_contrast_dn, params.min_contrast_sigma * residual_sigma
+            )
+        if not passes:
             rejected["contrast"] += 1
             continue
 
         dist = cv2.distanceTransform(comp, cv2.DIST_L2, 5)
         ridge = skeleton_of(comp, dist)
         ridge_px = int(np.count_nonzero(ridge))
+        if blackhat and ridge_px >= 4:
+            # On a crack several pixels wide the distance-transform ridge breaks into a
+            # scatter (see `thin`), which undercounts the length and inflates the mean
+            # width. Real cracks on the dev set are that wide, so length comes from the
+            # thinned centre line instead.
+            ridge_px = max(ridge_px, int(np.count_nonzero(thin(comp))))
         if ridge_px < 4:
             rejected["too_short"] += 1
             continue

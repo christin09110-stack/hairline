@@ -1,0 +1,1165 @@
+{
+ "metric": "hit if >=60% of a component's skeleton lies within max(2% diagonal, 2 expected widths) of a labelled centre line; networks count once",
+ "before": {
+  "code": "1d2e307 blackhat, synthetic filters (min_contrast_sigma x adaptive residual, min_elongation 4, min_length 25 mm, max_width 12 mm at nominal 0.5 mm = expected width), seed 6",
+  "overrides": {},
+  "cracks_found": 1,
+  "cracks_labelled": 18,
+  "false_components": 0,
+  "false_per_image": 0.0,
+  "per_image": {
+   "commons/boyana-cracked-concrete.jpg": {
+    "labelled": 2,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 150,
+     "elongation": 99,
+     "contrast": 9,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/downtowngal-concrete-rebar.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 1135,
+     "elongation": 363,
+     "contrast": 15,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/fhwa-asr-barrier-2006.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 57,
+     "elongation": 19,
+     "contrast": 2,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/harvey-concrete-cracked.jpg": {
+    "labelled": 3,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 6,
+     "elongation": 30,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/medway-retaining-wall.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 5,
+     "elongation": 62,
+     "contrast": 7,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/medway-vertical-crack-detail.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 3,
+     "elongation": 50,
+     "contrast": 1,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/nara-bridge-pier-crack-1936.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 75,
+     "elongation": 300,
+     "contrast": 16,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/prygpt-hairline-cracks.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 488,
+     "elongation": 81,
+     "contrast": 1,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/richfield-wall-9058.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 2897,
+     "elongation": 354,
+     "contrast": 162,
+     "too_wide": 0,
+     "too_short": 14,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/richfield-wall-9061.jpg": {
+    "labelled": 4,
+    "found": 1,
+    "false_components": 0,
+    "kept": 1,
+    "rejected": {
+     "area": 11956,
+     "elongation": 1081,
+     "contrast": 63,
+     "too_wide": 0,
+     "too_short": 5,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/negative-00001.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 2,
+     "elongation": 3,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00001.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 0,
+     "elongation": 1,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00002.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 2,
+     "elongation": 2,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00003.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 0,
+     "elongation": 1,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00004.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 0,
+     "elongation": 1,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00005.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 0,
+     "elongation": 2,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   }
+  }
+ },
+ "after": {
+  "overrides": {},
+  "cracks_found": 12,
+  "cracks_labelled": 18,
+  "false_components": 231,
+  "false_per_image": 14.44,
+  "per_image": {
+   "commons/boyana-cracked-concrete.jpg": {
+    "labelled": 2,
+    "found": 1,
+    "false_components": 6,
+    "kept": 8,
+    "rejected": {
+     "area": 348,
+     "elongation": 0,
+     "contrast": 9,
+     "too_wide": 0,
+     "too_short": 10,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/downtowngal-concrete-rebar.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 11,
+    "kept": 11,
+    "rejected": {
+     "area": 2839,
+     "elongation": 0,
+     "contrast": 454,
+     "too_wide": 0,
+     "too_short": 36,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/fhwa-asr-barrier-2006.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 2,
+    "kept": 9,
+    "rejected": {
+     "area": 80,
+     "elongation": 0,
+     "contrast": 9,
+     "too_wide": 0,
+     "too_short": 9,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/harvey-concrete-cracked.jpg": {
+    "labelled": 3,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 168,
+     "elongation": 0,
+     "contrast": 35,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/medway-retaining-wall.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 4,
+    "kept": 6,
+    "rejected": {
+     "area": 70,
+     "elongation": 0,
+     "contrast": 1,
+     "too_wide": 0,
+     "too_short": 1,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/medway-vertical-crack-detail.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 1,
+    "kept": 3,
+    "rejected": {
+     "area": 58,
+     "elongation": 0,
+     "contrast": 3,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 1
+    }
+   },
+   "commons/nara-bridge-pier-crack-1936.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 15,
+    "kept": 15,
+    "rejected": {
+     "area": 408,
+     "elongation": 0,
+     "contrast": 35,
+     "too_wide": 0,
+     "too_short": 16,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/prygpt-hairline-cracks.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 1,
+    "kept": 1,
+    "rejected": {
+     "area": 1101,
+     "elongation": 0,
+     "contrast": 54,
+     "too_wide": 0,
+     "too_short": 26,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "commons/richfield-wall-9058.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 113,
+    "kept": 113,
+    "rejected": {
+     "area": 5584,
+     "elongation": 0,
+     "contrast": 271,
+     "too_wide": 0,
+     "too_short": 62,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 17
+    }
+   },
+   "commons/richfield-wall-9061.jpg": {
+    "labelled": 4,
+    "found": 4,
+    "false_components": 78,
+    "kept": 93,
+    "rejected": {
+     "area": 16034,
+     "elongation": 0,
+     "contrast": 192,
+     "too_wide": 0,
+     "too_short": 321,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 13
+    }
+   },
+   "mendeley-ozgenel/negative-00001.jpg": {
+    "labelled": 0,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 10,
+     "elongation": 0,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00001.jpg": {
+    "labelled": 1,
+    "found": 0,
+    "false_components": 0,
+    "kept": 0,
+    "rejected": {
+     "area": 0,
+     "elongation": 0,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 1,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00002.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 0,
+    "kept": 1,
+    "rejected": {
+     "area": 1,
+     "elongation": 0,
+     "contrast": 1,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00003.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 0,
+    "kept": 1,
+    "rejected": {
+     "area": 0,
+     "elongation": 0,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00004.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 0,
+    "kept": 1,
+    "rejected": {
+     "area": 0,
+     "elongation": 0,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   },
+   "mendeley-ozgenel/positive-00005.jpg": {
+    "labelled": 1,
+    "found": 1,
+    "false_components": 0,
+    "kept": 1,
+    "rejected": {
+     "area": 2,
+     "elongation": 0,
+     "contrast": 0,
+     "too_wide": 0,
+     "too_short": 0,
+     "touches_frame_edge": 0,
+     "merged_into_branches": 0
+    }
+   }
+  }
+ },
+ "sweep": [
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 1,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 1419
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 1,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 233
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 2,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 1400
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 2,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 232
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 7,
+   "false_components": 313
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 88
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 42
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 3,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 1,
+   "false_components": 6
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 1,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 967
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 1,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 7,
+   "false_components": 196
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 2,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 967
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 2,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 7,
+   "false_components": 196
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 651
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 6,
+   "false_components": 163
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 178
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 6,
+   "false_components": 39
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 1,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 508
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 1,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 103
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 2,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 508
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 2,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 103
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 508
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 103
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 468
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 6,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 2,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 5,
+   "false_components": 96
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 16,
+   "false_components": 2199
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 14,
+   "false_components": 971
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 14,
+   "false_components": 1178
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 486
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 11,
+   "false_components": 547
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 6,
+   "false_components": 236
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 14,
+   "false_components": 1267
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 621
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 635
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 8,
+   "false_components": 308
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 272
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 6,
+   "false_components": 146
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 739
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 11,
+   "false_components": 381
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 11,
+   "false_components": 346
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 7,
+   "false_components": 168
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 128
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 4,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 6,
+   "false_components": 68
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 17,
+   "false_components": 2013
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 14,
+   "false_components": 765
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 15,
+   "false_components": 1158
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 10,
+   "false_components": 425
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 14,
+   "false_components": 551
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 9,
+   "false_components": 198
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 16,
+   "false_components": 1497
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 13,
+   "false_components": 676
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 13,
+   "false_components": 829
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 9,
+   "false_components": 381
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 13,
+   "false_components": 398
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 3.5,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 9,
+   "false_components": 184
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 13,
+   "false_components": 846
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 8,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 429
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 465
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 12,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 8,
+   "false_components": 237
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 1,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 12,
+   "false_components": 231
+  },
+  {
+   "overrides": {
+    "blackhat_seed_sigma": 5,
+    "blackhat_min_contrast_sigma": 4,
+    "blackhat_min_length_widths": 20,
+    "blackhat_min_elongation": 3,
+    "blackhat_max_width_ratio": 5
+   },
+   "cracks_found": 8,
+   "false_components": 117
+  }
+ ],
+ "sweep_note": "s1 ran before the thinned-centre-line length fix, s2 after."
+}
