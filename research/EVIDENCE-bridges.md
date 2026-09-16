@@ -8,7 +8,7 @@ An appendix to `research/EVIDENCE.md`, added by the video pass on 16 September
 > rail inspection were not researched.
 
 That left Hairline, the crack-width product, with no verified number it was
-allowed to put on a slide. FINDINGS.md §5.2 carries an ASCE passage with six
+allowed to put on a slide. carries an ASCE passage with six
 figures, but unlike every other fetched source in that document it names no
 saved artefact, only a bare URL, so under the project's own rule it had to be
 treated as unverified until checked.
@@ -100,6 +100,6 @@ four:
 > honest answer today is that nobody has published that evidence. Better to say
 > so than to be caught implying otherwise.
 
-And the 380x error in FINDINGS.md §5.0 is a first-person result from this
+And the 380x error in is a first-person result from this
 project's own feasibility work, not a citation. Use it as narrative — "built the
 naive way, it reported 283 mm for a 0.75 mm crack" — never as a source.

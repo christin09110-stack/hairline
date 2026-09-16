@@ -1,6 +1,6 @@
 """The estimator's mathematics, checked without any image in the way.
 
-These are the tests that would have caught the 380x error in research/FINDINGS.md
+These are the tests that would have caught the 380x error in 
 section 5.0 before it reached a frame: they assert what the width model does on inputs
 whose right answer is arithmetic rather than photography.
 """
@@ -86,7 +86,7 @@ class TestLookupTable:
 
 
 class TestTheRecordedBug:
-    """research/FINDINGS.md section 5.0: a filled contour reported 283 mm for 0.75 mm."""
+    """section 5.0: a filled contour reported 283 mm for 0.75 mm."""
 
     def test_filling_an_open_polyline_still_produces_the_380x_error(self):
         from visioncore.measure import filled_polyline_width_max

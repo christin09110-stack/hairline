@@ -152,7 +152,7 @@ class TestRunnerScript:
 
 class TestWorkloadRegistry:
     def test_the_cool_relevant_workloads_are_the_expensive_ones(self):
-        """FINDINGS 2.3: adaptiveThreshold and findContours dominate a 4K frame."""
+        """adaptiveThreshold and findContours dominate a 4K frame."""
         assert WORKLOADS["adaptive_threshold"].cool_relevant
         assert WORKLOADS["find_contours"].cool_relevant
         assert WORKLOADS["crack_pipeline"].cool_relevant

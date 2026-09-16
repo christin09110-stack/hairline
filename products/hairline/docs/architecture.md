@@ -75,7 +75,7 @@ exists to check:
 
 - **`DT` never runs on a filled contour.** Filling an open crack path and taking the
   maximum of the distance transform measures the area the path encloses, not the
-  stroke. `research/FINDINGS.md` §5.0 recorded that reading 283 mm for a 0.75 mm
+  stroke. recorded that reading 283 mm for a 0.75 mm
   crack. `tests/test_width_math.py` keeps that bug executable and asserts the engine
   contains no filled-contour call.
 - **`N` uses the Jacobian, not a single scale.** Perpendicular-on-screen and

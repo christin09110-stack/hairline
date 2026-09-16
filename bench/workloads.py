@@ -5,7 +5,7 @@ the arms genuinely run the same lines. Each one declares `frames_per_run` so
 throughput and cost-per-1000-frames mean something.
 
 Which functions are worth benchmarking at all (measured on x86, 4K frame,
-22 threads, opencv-python 5.0.0.93 -- research/FINDINGS.md 2.3):
+22 threads, opencv-python 5.0.0.93):
 
     findContours (RETR_LIST)          607.16 ms
     adaptiveThreshold GAUSSIAN 31      30.54 ms

@@ -13,7 +13,7 @@ It runs three ways, and all three are the same code:
   report any width at all** and says so on every response.
 
 That last one matters. A measuring instrument that has lost its calibration and keeps
-answering is worse than one that stops, and `research/FINDINGS.md` §5.0 is the record
+answering is worse than one that stops, and is the record
 of what a confident wrong number from this exact pipeline looks like: 283 mm for a
 0.75 mm crack.
 

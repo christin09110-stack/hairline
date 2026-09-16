@@ -7,7 +7,7 @@ printed on the card comes back with that width on it.
 
 If this file fails, the build fails, and the service refuses to publish any width and
 says so. That is the difference between this product and the 283 mm reading for a
-0.75 mm crack in `research/FINDINGS.md` §5.0.
+0.75 mm crack in 
 """
 
 from __future__ import annotations

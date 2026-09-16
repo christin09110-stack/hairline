@@ -3,7 +3,7 @@
 No matplotlib. A chart here is a few dozen line segments and some text, SVG renders
 in GitHub markdown without a build step, and the file stays readable and diffable,
 which matters more for a report a judge is going to read than a plotting library
-would. The palette is Hairline's, from `docs/design/atlas.md`.
+would. The palette is Hairline's
 """
 
 from __future__ import annotations

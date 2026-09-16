@@ -1,6 +1,6 @@
 """The benchmark arms, and the honesty that has to go with them.
 
-The trap (research/FINDINGS.md 2.3): the stock PyPI aarch64 wheel **already
+The trap: the stock PyPI aarch64 wheel **already
 ships KleidiCV 26.03**, confirmed by `strings` on `cv2.abi3.so`. Most COOL
 entries will benchmark COOL-on-Graviton against pip-on-x86, get a big number,
 and be measuring the architecture rather than COOL. Arm B below is a pip wheel
@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 # us-east-1 on-demand, from the AWS Price List API, queried 2026-09-16
-# (research/FINDINGS.md 3.2). COOL software fees come from the Marketplace
+# COOL software fees come from the Marketplace
 # listing's usage-cost table (2.2) and are additive to the EC2 rate.
 EC2_USD_PER_HOUR: dict[str, float] = {
     "t4g.micro": 0.0084,

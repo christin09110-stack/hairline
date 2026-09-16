@@ -17,7 +17,6 @@ of COOL** award.
 | **COOL benchmark, including the arm that did not run** | [`products/hairline/docs/cool-benchmark.md`](products/hairline/docs/cool-benchmark.md) |
 | **Architecture diagrams** | [`products/hairline/docs/architecture.md`](products/hairline/docs/architecture.md) |
 | **AWS resources and what they cost** | [`products/hairline/docs/costs.md`](products/hairline/docs/costs.md) |
-| **Submission text** | [`products/hairline/docs/devpost.md`](products/hairline/docs/devpost.md) |
 
 ## Why the layout looks like a monorepo
 

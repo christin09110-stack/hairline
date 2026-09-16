@@ -7,7 +7,7 @@ name: hairline
 # and the deploy step both depend on the test job, and the test job fails if a line of
 # known printed width comes back with the wrong width on it.
 #
-# research/FINDINGS.md §5.0 is why: a previous implementation of this measurement
+# Why this gate exists: a previous implementation of this measurement
 # reported 283 mm for a 0.75 mm crack and nothing raised. A build that cannot measure
 # a line it drew itself must not reach a structure.
 

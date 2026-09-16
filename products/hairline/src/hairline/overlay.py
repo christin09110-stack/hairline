@@ -1,6 +1,6 @@
 """Drawing the survey onto the frame: the measurement ladder and the title block.
 
-`docs/design/atlas.md` specifies Hairline's signature element as a measurement
+specifies Hairline's signature element as a measurement
 ladder: short perpendicular ticks along the crack's medial axis, each one a real
 sample from the profile pass, with the 95th-percentile tick drawn longer and labelled
 in millimetres. Under the frame sits a drawing scale bar in millimetres, and in the
@@ -38,7 +38,7 @@ __all__ = ["draw_refusal_frame", "draw_survey_overlay", "palette"]
 
 ASSETS = Path(__file__).parent / "assets"
 
-# docs/design/atlas.md section 5, as BGR.
+# section 5, as BGR.
 PALETTE: dict[str, tuple[int, int, int]] = {
     "ink": (29, 24, 18),
     "paper": (243, 248, 250),

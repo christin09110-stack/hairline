@@ -4,7 +4,7 @@ The stage order is adaptive Gaussian thresholding, morphological cleanup, connec
 components, then `findContours` per surviving component. Two of those -- adaptive
 Gaussian thresholding and contour detection -- are functions the Cloud Optimized
 OpenCV Library names in its own listing, and on a 4K frame they measured at 30.5 ms
-and 607 ms respectively in `research/FINDINGS.md` §2.3. That is why this product,
+and 607 ms respectively in That is why this product,
 rather than another of the five, carries the COOL benchmark.
 
 Rejecting things that are dark but are not cracks
@@ -219,7 +219,7 @@ def skeleton_of(mask: np.ndarray, dist: np.ndarray | None = None) -> np.ndarray:
     """Ridge of the distance transform: the centre line of a thin feature.
 
     Deliberately the same construction `visioncore.medial_axis` uses, because the
-    380x error in `research/FINDINGS.md` §5.0 came from measuring somewhere other
+    380x error in came from measuring somewhere other
     than the ridge.
     """
     if dist is None:

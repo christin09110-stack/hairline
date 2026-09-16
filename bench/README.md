@@ -49,7 +49,7 @@ value", and a turnkey AMI with preconfigured venvs is a real second axis.
 
 ## Choosing a workload
 
-Measured on x86, 4K frame, 22 threads (`research/FINDINGS.md` §2.3):
+Measured on x86, 4K frame, 22 threads:
 
 | Function | ms |
 |---|---:|

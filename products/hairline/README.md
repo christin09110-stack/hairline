@@ -46,7 +46,7 @@ And then the part that matters most:
 
 ## Why refusal is the feature
 
-`research/FINDINGS.md` §5.0 records what happened on the first attempt at this
+records what happened on the first attempt at this
 problem: a crack-width routine filled an open contour and took the maximum of the
 distance transform. It reported **283 mm for a 0.75 mm crack**, a factor of 380.
 Nothing crashed. Nothing warned. The number looked like a number.
