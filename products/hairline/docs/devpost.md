@@ -233,6 +233,12 @@ running, and `/api/calibration` shows the latest calibration gate result. To try
 own wall, download the marker from `/api/target/marker.png?dpi=600`, print it at 100%,
 and measure the printed square with a ruler before you enter its size.
 
+To try a real photo that has a ruler or gauge card in it, tick "No printed marker? Use a
+ruler in the photo" under the upload box, choose the photo, click two points on the
+ruler, type the distance between them in millimetres, and drag boxes over the ruler and
+any writing. Tick "Crack runs off the photo" if it does. The report then says the scale
+is manual and carries the wider uncertainty.
+
 ## Footage credits
 
 Real photographs, used with a manual scale:
