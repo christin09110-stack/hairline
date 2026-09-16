@@ -5,6 +5,10 @@ photos has a scale.
 
 ## Set
 
+The photos are not in this repository. Download them from the sources listed in
+`docs/devpost.md` (footage credits) and set `HAIRLINE_PHOTOS` to the folder that holds
+`commons/`, `mendeley-ozgenel/` and `scaled/`.
+
 - `media/real/hairline/commons/`: 10 Wikimedia Commons photos.
 - `media/real/hairline/mendeley-ozgenel/`: 6 patches of 227 px (5 positive, 1 negative).
 

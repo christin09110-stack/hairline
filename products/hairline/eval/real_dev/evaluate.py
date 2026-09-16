@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -39,7 +40,7 @@ def _poly_px(poly, w, h):
 
 
 def evaluate(overrides: dict, labels: dict, *, verbose: bool = False) -> dict:
-    root = Path(labels["root"])
+    root = Path(os.path.expandvars(labels["root"]))
     per_image = {}
     tot_labelled = tot_found = tot_false = 0
     for rel, lab in labels["images"].items():

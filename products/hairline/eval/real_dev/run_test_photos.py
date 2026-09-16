@@ -7,12 +7,13 @@ Not used for tuning: run only after the defaults in config.py were committed.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from hairline.config import SurveyParams
 from hairline.survey import survey
 
-SCALED = Path("$HAIRLINE_PHOTOS/scaled")
+SCALED = Path(os.environ.get("HAIRLINE_PHOTOS", "photos")) / "scaled"
 
 TESTS = {
     "dsc07068": ("crack-dsc07068-jpg.jpg", {
