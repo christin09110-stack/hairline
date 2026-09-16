@@ -6,7 +6,7 @@ photos has a scale.
 ## Set
 
 The photos are not in this repository. Download them from the sources listed in
-`docs/devpost.md` (footage credits) and set `HAIRLINE_PHOTOS` to the folder that holds
+the sources under Photo sources below and set `HAIRLINE_PHOTOS` to the folder that holds
 `commons/`, `mendeley-ozgenel/` and `scaled/`.
 
 - `media/real/hairline/commons/`: 10 Wikimedia Commons photos.
@@ -71,3 +71,30 @@ separates them from a crack. The tool relies on exclusion polygons for those. Fo
 all 4 Richfield-9061 hairlines, Boyana, Medway x2, the FHWA network, and 4 of 5
 Mendeley patches. Missed: all three Harvey cracks (the exposed-aggregate slab lifts the
 response spread), the Nara 1936 print, the Boyana upper stub and Mendeley positive-00001.
+
+## Photo sources
+
+Real photographs, used with a manual scale:
+
+- **"Crack DSC07068.JPG"** by IJD Dublin. Public domain.
+  https://commons.wikimedia.org/wiki/File:Crack_DSC07068.JPG
+- **"Crack monitor in Dnipro.jpg"** by Alex Blokha. CC BY-SA 4.0.
+  https://commons.wikimedia.org/wiki/File:Crack_monitor_in_Dnipro.jpg
+
+Real photographs used to tune detection (Wikimedia Commons unless noted):
+
+- "Detail of vertical crack in concrete retaining wall at Medway Park Sports Centre" and
+  "Cracked concrete retaining wall at Medway Park Sports Centre", by
+  Sunolafjagtenben-hur. CC0 1.0.
+- "Concrete cracked.jpg" by John Harvey. Public domain.
+- "Cracked concrete.jpg" by Boyana.kjfg. CC BY 4.0.
+- "ASR cracks concrete step barrier FHWA 2006.jpg", US Federal Highway Administration.
+  Public domain.
+- "Close view of crack in concrete on east side of highway bridge pier no. 2", US Bureau
+  of Reclamation via the US National Archives. Public domain.
+- "Cracked concrete and rebar.jpg" by Downtowngal. CC BY-SA 4.0.
+- "Hairline cracks.jpg" by Prygpt. CC BY-SA 4.0.
+- "Concrete wall cracking as steel reinforcing corrodes and swells 9058" and "... 9061"
+  by JonRichfield. CC BY-SA 3.0.
+- Six patches from "Concrete Crack Images for Classification" by Ç.F. Özgenel, Mendeley
+  Data, CC BY 4.0. https://data.mendeley.com/datasets/5y9wdsg2zt/2
