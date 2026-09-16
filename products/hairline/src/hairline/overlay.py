@@ -270,22 +270,30 @@ def _draw_title_block(
 ) -> None:
     _h, w = canvas.shape[:2]
     ppm = gate.px_per_mm or 0.0
-    tolerance = max(
-        params.scale_floor_rel,
-        (gate.residual_px or 0.0) / max(gate.marker_edge_px or 1.0, 1.0),
-    )
+    manual = gate.scale_source == "manual"
+    if manual:
+        from .survey import manual_scale_rel_uncertainty
+
+        tolerance = manual_scale_rel_uncertainty(gate, params)
+        reference = f"two points, {params.manual_scale[4]:g} mm apart"
+        tilt = f"assumed under {params.manual_scale_max_tilt_deg:.0f}°"
+    else:
+        tolerance = max(
+            params.scale_floor_rel,
+            (gate.residual_px or 0.0) / max(gate.marker_edge_px or 1.0, 1.0),
+        )
+        reference = (f"{params.marker_dictionary}  "
+                     f"id {', '.join(str(i) for i in gate.marker_ids) or '-'}")
+        tilt = (f"{gate.apparent_tilt_deg:.0f}° apparent"
+                if gate.apparent_tilt_deg is not None else "-")
     measured = sum(1 for c in cracks if c.measurement.ok)
     rows = [
-        (
-            "Scale reference",
-            f"{params.marker_dictionary}  "
-            f"id {', '.join(str(i) for i in gate.marker_ids) or '-'}",
-        ),
+        ("Scale reference", reference),
         ("Recovered scale", f"{ppm:.3f} px/mm  ±{tolerance * 100:.2f}%"),
         ("Resolution", f"{1000.0 / ppm:.0f} µm per pixel" if ppm else "-"),
-        ("Surface off square", f"{gate.apparent_tilt_deg:.0f}° apparent"
-         if gate.apparent_tilt_deg is not None else "-"),
-        ("Lens blur", f"{sigma_px:.2f} px std dev, from {sigma_source}"),
+        ("Surface off square", tilt),
+        ("Lens blur", f"{sigma_px:.2f} px std dev, "
+                      f"from {sigma_source.replace(' (no marker)', '')}"),
         ("Estimator", params.estimator.replace("_", " ")),
         ("Crack runs", f"{measured} measured, {len(cracks) - measured} declined"),
         ("Frame", f"{gate.index} at {gate.timestamp_ms / 1000.0:.2f} s"),
