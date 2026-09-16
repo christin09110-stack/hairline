@@ -84,6 +84,7 @@ class FrameGate:
     marker_ids: tuple[int, ...] = ()
     station_mm: tuple[float, float] | None = None
     refusal: Refusal | None = None
+    scale_source: str = "marker"
 
     def to_dict(self) -> dict[str, Any]:
         def r(v: float | None, n: int = 2) -> float | None:
@@ -105,6 +106,7 @@ class FrameGate:
             if self.station_mm is None
             else [round(self.station_mm[0], 1), round(self.station_mm[1], 1)],
             "refusal": self.refusal.to_dict() if self.refusal else None,
+            "scale_source": self.scale_source,
         }
 
 
@@ -246,6 +248,10 @@ def gate_frame(
             max_residual_px=params.max_residual_px,
             max_obliquity_deg=90.0,
         )
+    elif params.manual_scale is not None:
+        return _manual_scale_gate(
+            frame, params, gray, sharp=sharp, mean_level=mean_level, clipped=clipped
+        )
     else:
         return refuse(
             "NO_MARKER",
@@ -302,6 +308,78 @@ def gate_frame(
     centre_mm = plane.to_mm(np.array([[w / 2.0, h / 2.0]]))[0]
     gate.station_mm = (float(centre_mm[0]), float(centre_mm[1]))
     return gate, plane, corners
+
+
+def _manual_scale_gate(
+    frame: Frame,
+    params: SurveyParams,
+    gray: np.ndarray,
+    *,
+    sharp: float,
+    mean_level: float,
+    clipped: float,
+) -> tuple[FrameGate, PlaneMap | None, list[np.ndarray]]:
+    """Scale from two operator-chosen points on a reference of known length.
+
+    This is the fallback for photographs that carry a ruler or a crack gauge instead of
+    the printed marker. Two points give a scale and nothing else: no tilt, no residual,
+    no blur calibration. So the plane is taken as square to the camera, and the tilt the
+    operator vouches for is charged to the uncertainty rather than assumed away.
+    """
+    assert params.manual_scale is not None
+    h, w = gray.shape[:2]
+    x1, y1, x2, y2, length_mm = params.manual_scale
+    p1 = np.array([x1 * w, y1 * h])
+    p2 = np.array([x2 * w, y2 * h])
+    span_px = float(np.linalg.norm(p2 - p1))
+    gate = FrameGate(
+        index=frame.index,
+        timestamp_ms=frame.timestamp_ms,
+        ok=True,
+        sharpness=sharp,
+        mean_level=mean_level,
+        clipped_fraction=clipped,
+        scale_source="manual",
+    )
+    if span_px < params.min_marker_px:
+        gate.ok = False
+        gate.refusal = Refusal(
+            "SCALE_TOO_SHORT",
+            f"the two scale points are {span_px:.0f} px apart (floor "
+            f"{params.min_marker_px:.0f} px). Pick points further apart on the reference.",
+            details={"span_px": round(span_px, 1)},
+        )
+        return gate, None, []
+    ppm = span_px / length_mm
+    plane = PlaneMap(np.array([[ppm, 0.0, 0.0], [0.0, ppm, 0.0], [0.0, 0.0, 1.0]]))
+    gate.px_per_mm = ppm
+    gate.apparent_tilt_deg = 0.0
+    gate.residual_px = params.manual_scale_click_px
+    gate.marker_edge_px = span_px
+    centre_mm = plane.to_mm(np.array([[w / 2.0, h / 2.0]]))[0]
+    gate.station_mm = (float(centre_mm[0]), float(centre_mm[1]))
+    return gate, plane, []
+
+
+def manual_scale_rel_uncertainty(gate: FrameGate, params: SurveyParams) -> float:
+    """Relative scale uncertainty for a two-point scale.
+
+    Each point can be off by `manual_scale_click_px`, which moves the span by up to twice
+    that. An unmeasured tilt up to `manual_scale_max_tilt_deg` foreshortens by up to
+    1/cos - 1. The two add, because nothing here can tell them apart.
+    """
+    span = max(gate.marker_edge_px or 1.0, 1.0)
+    click = 2.0 * params.manual_scale_click_px / span
+    tilt = 1.0 / math.cos(math.radians(params.manual_scale_max_tilt_deg)) - 1.0
+    return max(params.scale_floor_rel, click + tilt)
+
+
+def exclusion_polygons_px(params: SurveyParams, shape: tuple[int, ...]) -> list[np.ndarray]:
+    h, w = shape[:2]
+    return [
+        np.array([[x * w, y * h] for x, y in poly], dtype=np.float64)
+        for poly in params.exclude_regions
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -466,15 +544,19 @@ def _survey(
                 plane=plane,
                 px_per_mm=gate.px_per_mm or 1.0,
                 marker_corners=corners,
+                exclude_polygons=exclusion_polygons_px(params, frame.image.shape),
             )
         record.metrics.setdefault("segmentation", []).append(
             {"frame": frame.index, **seg.to_dict()}
         )
 
-        scale_rel = max(
-            params.scale_floor_rel,
-            (gate.residual_px or 0.0) / max(gate.marker_edge_px or 1.0, 1.0),
-        )
+        if gate.scale_source == "manual":
+            scale_rel = manual_scale_rel_uncertainty(gate, params)
+        else:
+            scale_rel = max(
+                params.scale_floor_rel,
+                (gate.residual_px or 0.0) / max(gate.marker_edge_px or 1.0, 1.0),
+            )
 
         frame_cracks: list[CrackRecord] = []
         with stage("measure"):
@@ -560,6 +642,19 @@ def _survey(
             "gates": [g.to_dict() for g in gates],
         }
     )
+    if any(g.scale_source == "manual" for g in gates if g.ok):
+        record.metrics["scale_source"] = "manual"
+        record.warn(
+            "scale from two points on a reference of known length, not the printed marker: "
+            "the surface is assumed square to the camera within "
+            f"{params.manual_scale_max_tilt_deg:.0f} degrees, and blur is a default "
+            "rather than measured, so widths carry a wider interval"
+        )
+    if params.keep_edge_cracks:
+        record.warn(
+            "cracks that leave the frame are measured on their interior only; "
+            "their lengths are lower bounds"
+        )
     record.results = [c.to_dict() for c in cracks]
     for crack in cracks:
         if crack.measurement.refusal:

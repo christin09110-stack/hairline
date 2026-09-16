@@ -24,12 +24,24 @@ def _measure(args: argparse.Namespace) -> int:
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    params = SurveyParams(
-        marker_length_mm=args.marker_mm,
-        estimator=args.estimator,
-        frame_stride=args.stride,
-        working_distance_mm=args.stand_off_mm,
-    )
+    extra: dict = {}
+    if args.scale:
+        extra["manual_scale"] = [float(v) for v in args.scale.split(",")]
+        extra["manual_scale_max_tilt_deg"] = args.max_tilt_deg
+    if args.exclude:
+        extra["exclude_regions"] = [
+            [[float(c) for c in pt.split(",")] for pt in poly.split(";")]
+            for poly in args.exclude
+        ]
+    if args.keep_edge_cracks:
+        extra["keep_edge_cracks"] = True
+    params = SurveyParams.from_request({
+        "marker_length_mm": args.marker_mm,
+        "estimator": args.estimator,
+        "frame_stride": args.stride,
+        "working_distance_mm": args.stand_off_mm,
+        **extra,
+    })
 
     def save(name: str, data: bytes) -> str:
         (out / name).write_bytes(data)
@@ -110,6 +122,17 @@ def main(argv: list[str] | None = None) -> int:
     measure.add_argument("--stand-off-mm", type=float, default=350.0)
     measure.add_argument("--stride", type=int, default=3)
     measure.add_argument("--estimator", choices=ESTIMATORS, default="blur_corrected")
+    measure.add_argument(
+        "--scale", metavar="X1,Y1,X2,Y2,MM",
+        help="manual scale when there is no printed marker: two points on a reference of "
+        "known length (as fractions of width and height) and that length in mm",
+    )
+    measure.add_argument("--max-tilt-deg", type=float, default=10.0,
+                         help="largest surface tilt you vouch for with a manual scale")
+    measure.add_argument("--exclude", action="append", metavar="X,Y;X,Y;X,Y",
+                         help="polygon to leave out of crack finding, e.g. the ruler")
+    measure.add_argument("--keep-edge-cracks", action="store_true",
+                         help="measure cracks that leave the frame on their interior only")
     measure.set_defaults(func=_measure)
 
     sheets = sub.add_parser("sheets", help="write the printable marker and calibration target")

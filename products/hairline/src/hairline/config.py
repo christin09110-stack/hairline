@@ -50,6 +50,22 @@ class SurveyParams:
     marker_dictionary: str = "DICT_4X4_50"
     checkerboard: tuple[int, int] | None = None
     square_size_mm: float | None = None
+    manual_scale: tuple[float, float, float, float, float] | None = None
+    """(x1, y1, x2, y2, length_mm): two points on something of known length that lies on
+    the surface, such as a ruler, a crack gauge or a tile edge. x and y are fractions of
+    the frame's width and height, so the same numbers work at any resolution.
+
+    Used only when no printed marker is found. It gives an isotropic scale and cannot see
+    tilt, so the surface is assumed square to the camera and that assumption is carried
+    into the uncertainty (`manual_scale_max_tilt_deg`), not hidden."""
+    manual_scale_click_px: float = 2.0
+    """How far each of the two points may be from where the operator meant, in pixels."""
+    manual_scale_max_tilt_deg: float = 10.0
+    """Largest tilt the operator vouches for when using a manual scale. A surface this far
+    off square foreshortens widths by up to 1/cos(tilt) - 1, added to the scale term."""
+    exclude_regions: tuple[tuple[tuple[float, float], ...], ...] = ()
+    """Polygons, as fractions of width and height, left out of crack finding. With a manual
+    scale this should cover the ruler or gauge, whose printed lines look like cracks."""
 
     # --- frame selection --------------------------------------------------
     frame_stride: int = 3
@@ -133,6 +149,17 @@ class SurveyParams:
     min_length_mm: float = 25.0
     edge_margin_px: float = 6.0
     """Components this close to the frame edge are refused: their extent is unknown."""
+    segmentation: str = "adaptive"
+    """"adaptive" (tuned on smooth concrete) or "blackhat" (rough real surfaces; see
+    segment._blackhat_binary). The default is unchanged so every published synthetic
+    number still holds."""
+    blackhat_seed_sigma: float = 6.0
+    """Seed threshold for "blackhat", in robust standard deviations of the response."""
+    keep_edge_cracks: bool = False
+    """For stills where the crack runs out of the frame. A band along the frame edge is
+    blanked before crack finding, so a crack that leaves the frame is measured on its
+    interior only, with every width profile complete. Its length is then a lower bound,
+    and the run record says so."""
     split_branches: bool = True
     """Cut crack networks at their junctions so each run is measured on its own."""
 
@@ -205,6 +232,13 @@ class SurveyParams:
         return {
             "marker_length_mm": self.marker_length_mm,
             "marker_dictionary": self.marker_dictionary,
+            "manual_scale": list(self.manual_scale) if self.manual_scale else None,
+            "manual_scale_click_px": self.manual_scale_click_px,
+            "keep_edge_cracks": self.keep_edge_cracks,
+            "segmentation": self.segmentation,
+            "blackhat_seed_sigma": self.blackhat_seed_sigma,
+            "manual_scale_max_tilt_deg": self.manual_scale_max_tilt_deg,
+            "exclude_regions": [[list(pt) for pt in poly] for poly in self.exclude_regions],
             "frame_stride": self.frame_stride,
             "max_frames": self.max_frames,
             "min_station_shift_mm": self.min_station_shift_mm,
@@ -241,7 +275,7 @@ class SurveyParams:
                 "expected_width_mm", "threshold_c",
                 "min_component_area_px", "min_elongation", "min_contrast_dn", "threshold_k",
                 "min_length_mm", "estimator", "coplanarity_mm", "coverage_factor",
-                "working_distance_mm",
+                "working_distance_mm", "manual_scale_click_px", "manual_scale_max_tilt_deg",
             )
             if f in params and params[f] is not None
         }
@@ -253,10 +287,35 @@ class SurveyParams:
             "min_resolved_px", "min_width_sigma_ratio", "max_relative_uncertainty",
             "expected_width_mm", "threshold_c", "threshold_k", "min_elongation",
             "min_contrast_dn", "min_length_mm", "coplanarity_mm", "coverage_factor",
-            "working_distance_mm",
+            "working_distance_mm", "manual_scale_click_px", "manual_scale_max_tilt_deg",
         ):
             if key in known:
                 known[key] = float(known[key])
+        if params.get("segmentation") is not None:
+            if params["segmentation"] not in ("adaptive", "blackhat"):
+                raise ValueError("segmentation must be 'adaptive' or 'blackhat'")
+            known["segmentation"] = params["segmentation"]
+        if params.get("blackhat_seed_sigma") is not None:
+            known["blackhat_seed_sigma"] = float(params["blackhat_seed_sigma"])
+        if params.get("keep_edge_cracks") is not None:
+            known["keep_edge_cracks"] = bool(params["keep_edge_cracks"])
+        if params.get("manual_scale") is not None:
+            ms = [float(v) for v in params["manual_scale"]]
+            if len(ms) != 5:
+                raise ValueError("manual_scale must be [x1, y1, x2, y2, length_mm]")
+            if not all(0.0 <= v <= 1.0 for v in ms[:4]):
+                raise ValueError("manual_scale points must be fractions between 0 and 1")
+            if ms[4] <= 0:
+                raise ValueError("manual_scale length_mm must be positive")
+            known["manual_scale"] = tuple(ms)
+        if params.get("exclude_regions"):
+            regions = []
+            for poly in params["exclude_regions"]:
+                pts = tuple((float(x), float(y)) for x, y in poly)
+                if len(pts) < 3:
+                    raise ValueError("each exclude region needs at least three points")
+                regions.append(pts)
+            known["exclude_regions"] = tuple(regions)
         params_obj = cls(**known)
         if params_obj.marker_length_mm <= 0:
             raise ValueError("marker_length_mm must be positive")

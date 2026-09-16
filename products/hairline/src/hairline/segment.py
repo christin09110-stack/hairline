@@ -229,6 +229,54 @@ def skeleton_of(mask: np.ndarray, dist: np.ndarray | None = None) -> np.ndarray:
     return ridge.astype(np.uint8)
 
 
+def _blackhat_binary(
+    gray: np.ndarray,
+    expected_px: float,
+    params: SurveyParams,
+    exclude_polygons: list[np.ndarray] | None,
+) -> np.ndarray:
+    """Dark thin structure on rough real surfaces: black-hat, then hysteresis.
+
+    The adaptive threshold was tuned on smooth synthetic concrete. On real pebbledash and
+    painted plaster its local mean follows the texture, so a crack breaks into hundreds of
+    fragments and none survives the length filter. A morphological black-hat with an
+    element a few crack-widths across keeps only what is darker than its neighbourhood at
+    that scale. Hysteresis then grows strong seeds along weaker continuations, which is
+    what reconnects a crack across a patch of texture. Thresholds are in robust standard
+    deviations of the black-hat response over the surface actually shown.
+    """
+    h, w = gray.shape[:2]
+    g = gray.astype(np.float32)
+    blur = cv2.GaussianBlur(g, (0, 0), max(0.8, expected_px / 6.0))
+    k = int(max(9, expected_px * 2.5)) | 1
+    response = cv2.morphologyEx(
+        blur, cv2.MORPH_BLACKHAT, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
+    )
+    valid = np.ones((h, w), dtype=bool)
+    if exclude_polygons:
+        excluded = np.zeros((h, w), dtype=np.uint8)
+        for poly in exclude_polygons:
+            cv2.fillPoly(excluded, [np.asarray(poly, dtype=np.int32).reshape(-1, 2)], 255)
+        valid = excluded == 0
+    values = response[valid]
+    if values.size == 0:
+        return np.zeros((h, w), dtype=np.uint8)
+    centre = float(np.percentile(values, 50))
+    body = values[values < np.percentile(values, 95)]
+    spread = float(np.std(body)) if body.size else 1.0
+    spread = max(spread, 1.0)
+    strong = (response > centre + params.blackhat_seed_sigma * spread) & valid
+    weak = (response > centre + 0.5 * params.blackhat_seed_sigma * spread) & valid
+    n, labels, _, _ = cv2.connectedComponentsWithStats(weak.astype(np.uint8), 8)
+    seeds = np.unique(labels[strong])
+    seeds = seeds[seeds > 0]
+    binary = np.isin(labels, seeds).astype(np.uint8) * 255
+    close = int(max(3, expected_px)) | 1
+    return cv2.morphologyEx(
+        binary, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (close, close))
+    )
+
+
 def segment_cracks(
     image: np.ndarray,
     params: SurveyParams,
@@ -236,6 +284,7 @@ def segment_cracks(
     plane: PlaneMap | None = None,
     px_per_mm: float = 1.0,
     marker_corners: list[np.ndarray] | None = None,
+    exclude_polygons: list[np.ndarray] | None = None,
 ) -> SegmentResult:
     """Dark, thin, long, high-contrast components. Everything else is rejected."""
     gray = to_gray(image)
@@ -258,13 +307,15 @@ def segment_cracks(
         else np.clip(params.threshold_k * residual_sigma, 3.0, 45.0)
     )
 
-    binary = cv2.adaptiveThreshold(
-        gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, block, threshold_c
-    )
-
-    k3 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-    binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, k3, iterations=1)
-    binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, k3, iterations=1)
+    if params.segmentation == "blackhat":
+        binary = _blackhat_binary(gray, expected_px, params, exclude_polygons)
+    else:
+        binary = cv2.adaptiveThreshold(
+            gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, block, threshold_c
+        )
+        k3 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, k3, iterations=1)
+        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, k3, iterations=1)
 
     marker_mask = np.zeros_like(binary)
     if marker_corners:
@@ -272,6 +323,23 @@ def segment_cracks(
             gray.shape, marker_corners, pad_px=0.55
         )
         binary = cv2.bitwise_and(binary, cv2.bitwise_not(marker_mask))
+    if exclude_polygons:
+        # A ruler or crack gauge used as a manual scale carries printed lines that pass
+        # every crack filter. The operator outlines it; grow the outline a little so its
+        # edge and shadow go too.
+        excluded = np.zeros_like(binary)
+        for poly in exclude_polygons:
+            cv2.fillPoly(excluded, [np.asarray(poly, dtype=np.int32).reshape(-1, 2)], 255)
+        grow = max(3, _odd(expected_px * 4, 3))
+        excluded = cv2.dilate(excluded, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (grow, grow)))
+        marker_mask = cv2.bitwise_or(marker_mask, excluded)
+        binary = cv2.bitwise_and(binary, cv2.bitwise_not(excluded))
+    if params.keep_edge_cracks:
+        band = max(3 * round(params.edge_margin_px), int(round(2.5 * expected_px)))
+        binary[:band, :] = 0
+        binary[-band:, :] = 0
+        binary[:, :band] = 0
+        binary[:, -band:] = 0
 
     count, labels, stats, centroids = cv2.connectedComponentsWithStats(binary, 8)
 
