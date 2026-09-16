@@ -27,6 +27,13 @@
           <span class="dropzone__hint" id="dropzone-hint">…</span>
         </button>
         <input type="file" id="file-input" class="sr-only" aria-label="Choose a video or photograph">
+        <label class="check" for="manual-on">
+          <input type="checkbox" id="manual-on">
+          <span>No printed marker? Use a ruler in the photo</span>
+        </label>
+        <p class="field__help" id="manual-help" hidden>
+          Photographs only. Mark the ruler on the picture in the main panel, then measure.
+        </p>
         <button class="button" type="submit" id="submit" disabled>Measure this surface</button>
       </div>
 
@@ -80,6 +87,44 @@
       screen, and converted to millimetres through the printed marker. Where the
       photograph cannot support a number, this report says so and says why.
     </p>
+
+    <section class="block manual" id="manual-panel" hidden>
+      <div class="block__head">
+        <h2 class="block__title">Scale from a ruler in the photo</h2>
+        <span class="block__note" id="manual-status">Choose a photograph first.</span>
+      </div>
+      <div class="stations" id="manual-tools" role="group" aria-label="What a click on the photo does">
+        <button type="button" id="tool-scale" aria-pressed="true">Two points on the ruler</button>
+        <button type="button" id="tool-exclude" aria-pressed="false">Leave out (ruler, gauge, writing)</button>
+        <button type="button" class="button--quiet" id="manual-undo">Remove last leave-out</button>
+        <button type="button" class="button--quiet" id="manual-reset">Start over</button>
+      </div>
+      <div class="manual__stage" id="manual-stage">
+        <canvas id="manual-canvas" aria-label="The photograph. Click two points on the ruler, or drag a box over anything to leave out."></canvas>
+      </div>
+      <div class="manual__fields">
+        <div class="field">
+          <label for="manual-length">Length between the points <span class="field__unit">(mm)</span></label>
+          <input type="number" id="manual-length" min="0.1" max="5000" step="0.1" placeholder="read it off the ruler">
+        </div>
+        <div class="field">
+          <label for="manual-tilt">Surface square to the camera within <span class="field__unit">(°)</span></label>
+          <input type="number" id="manual-tilt" min="0" max="45" step="1" value="10">
+          <p class="field__help">Two points cannot see tilt. What you vouch for here is charged to the uncertainty.</p>
+        </div>
+        <div class="field">
+          <label class="check" for="manual-edge">
+            <input type="checkbox" id="manual-edge">
+            <span>Crack runs off the photo</span>
+          </label>
+          <label class="check" for="manual-rough">
+            <input type="checkbox" id="manual-rough" checked>
+            <span>Rough real surface</span>
+          </label>
+          <p class="field__help">Rough surface uses black-hat segmentation, which ignores texture better than the default on real concrete.</p>
+        </div>
+      </div>
+    </section>
 
     <section class="block" id="progress-panel" hidden>
       <div class="block__head">

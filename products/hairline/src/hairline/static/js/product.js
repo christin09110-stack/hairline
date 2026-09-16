@@ -107,8 +107,246 @@ function setFile(file, label) {
   ui.fileLabel.textContent = file
     ? (label || `${file.name} · ${(file.size / (1024 * 1024)).toFixed(1)} MB`)
     : 'Drop a clip, or click to choose';
-  ui.submit.disabled = !file;
+  manual.load(file);
+  refreshSubmit();
 }
+
+// The marker flow only needs a file. The ruler flow also needs the two points and the
+// length between them, because without those there is no scale at all.
+function refreshSubmit() {
+  ui.submit.disabled = !selectedFile || (manual.on && !manual.ready());
+}
+
+// ----------------------------------------------------------- manual scale ----
+// For photographs that carry a ruler or crack gauge instead of the printed marker.
+// Everything is kept as fractions of the photograph's natural size, which is what
+// SurveyParams.manual_scale and exclude_regions expect, so the canvas can be any size.
+
+const manual = (() => {
+  const toggle = $('manual-on');
+  const panel = $('manual-panel');
+  const canvas = $('manual-canvas');
+  const stage = $('manual-stage');
+  const status = $('manual-status');
+  const length = $('manual-length');
+  const tilt = $('manual-tilt');
+  const edge = $('manual-edge');
+  const rough = $('manual-rough');
+  const tools = { scale: $('tool-scale'), exclude: $('tool-exclude') };
+  const ctx = canvas.getContext('2d');
+
+  const state = { on: false, image: null, url: null, points: [], rects: [], tool: 'scale', drag: null };
+  const round = (v) => Math.round(Math.min(1, Math.max(0, v)) * 1e5) / 1e5;
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  function setTool(name) {
+    state.tool = name;
+    for (const [key, button] of Object.entries(tools)) button.setAttribute('aria-pressed', String(key === name));
+  }
+
+  function lengthMm() {
+    const v = Number(length.value);
+    return length.value !== '' && Number.isFinite(v) && v > 0 ? v : null;
+  }
+
+  function ready() {
+    return Boolean(state.image) && state.points.length === 2 && lengthMm() !== null;
+  }
+
+  function describe() {
+    if (!selectedFile) return 'Choose a photograph first.';
+    if (!state.image) return 'This works on a photograph, not a video. Choose a JPEG or PNG.';
+    if (state.points.length < 2) {
+      return state.points.length ? 'Now click the second point on the ruler.' : 'Click two points on the ruler, as far apart as you can read.';
+    }
+    if (lengthMm() === null) return 'Enter the length between the two points.';
+    const leaveOuts = state.rects.length ? `${state.rects.length} area${state.rects.length === 1 ? '' : 's'} left out` : 'drag a box over the ruler to leave it out';
+    return `Scale set · ${leaveOuts}`;
+  }
+
+  function sync() {
+    status.textContent = describe();
+    draw();
+    refreshSubmit();
+  }
+
+  function layout() {
+    if (!state.image) return;
+    const { naturalWidth: nw, naturalHeight: nh } = state.image;
+    const maxW = stage.clientWidth - 2;
+    const maxH = Math.max(240, window.innerHeight * 0.7);
+    const scale = Math.min(maxW / nw, maxH / nh);
+    const w = Math.max(1, Math.floor(nw * scale));
+    const h = Math.max(1, Math.floor(nh * scale));
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    draw();
+  }
+
+  function draw() {
+    const W = canvas.width;
+    const H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    if (!state.image) return;
+    ctx.drawImage(state.image, 0, 0, W, H);
+    const unit = W / parseFloat(canvas.style.width || W);
+    const accent = css('--accent') || '#15618f';
+    const signal = css('--signal') || '#a8321f';
+    const font = `600 ${13 * unit}px Barlow, sans-serif`;
+
+    const label = (text, x, y, colour) => {
+      ctx.font = font;
+      const pad = 4 * unit;
+      const tw = ctx.measureText(text).width;
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.fillRect(x, y - 15 * unit, tw + pad * 2, 19 * unit);
+      ctx.fillStyle = colour;
+      ctx.fillText(text, x + pad, y);
+    };
+
+    const rects = state.drag ? [...state.rects, state.drag] : state.rects;
+    rects.forEach((r, i) => {
+      const x = Math.min(r.x1, r.x2) * W;
+      const y = Math.min(r.y1, r.y2) * H;
+      const w = Math.abs(r.x2 - r.x1) * W;
+      const h = Math.abs(r.y2 - r.y1) * H;
+      ctx.fillStyle = 'rgba(168, 50, 31, 0.18)';
+      ctx.fillRect(x, y, w, h);
+      ctx.setLineDash([6 * unit, 4 * unit]);
+      ctx.lineWidth = 2 * unit;
+      ctx.strokeStyle = signal;
+      ctx.strokeRect(x, y, w, h);
+      ctx.setLineDash([]);
+      if (i < state.rects.length) label('left out', x + 4 * unit, y + 18 * unit, signal);
+    });
+
+    const pts = state.points.map((p) => [p.x * W, p.y * H]);
+    if (pts.length === 2) {
+      ctx.lineWidth = 2.5 * unit;
+      ctx.strokeStyle = accent;
+      ctx.beginPath();
+      ctx.moveTo(...pts[0]);
+      ctx.lineTo(...pts[1]);
+      ctx.stroke();
+      const mid = [(pts[0][0] + pts[1][0]) / 2, (pts[0][1] + pts[1][1]) / 2];
+      const mmText = lengthMm() === null ? 'length? mm' : `${lengthMm()} mm`;
+      label(mmText, mid[0] + 6 * unit, mid[1] - 10 * unit, accent);
+    }
+    for (const [x, y] of pts) {
+      ctx.lineWidth = 2 * unit;
+      ctx.strokeStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(x, y, 7 * unit, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = accent;
+      ctx.beginPath();
+      ctx.arc(x, y, 5.5 * unit, 0, Math.PI * 2);
+      ctx.moveTo(x - 11 * unit, y); ctx.lineTo(x + 11 * unit, y);
+      ctx.moveTo(x, y - 11 * unit); ctx.lineTo(x, y + 11 * unit);
+      ctx.stroke();
+    }
+  }
+
+  function at(event) {
+    const box = canvas.getBoundingClientRect();
+    return { x: round((event.clientX - box.left) / box.width), y: round((event.clientY - box.top) / box.height) };
+  }
+
+  canvas.addEventListener('pointerdown', (event) => {
+    if (!state.image) return;
+    event.preventDefault();
+    const p = at(event);
+    if (state.tool === 'scale') {
+      // A third click starts a new pair rather than guessing which point to move.
+      state.points = state.points.length >= 2 ? [p] : [...state.points, p];
+      sync();
+      if (state.points.length === 2 && lengthMm() === null) length.focus();
+      return;
+    }
+    canvas.setPointerCapture(event.pointerId);
+    state.drag = { x1: p.x, y1: p.y, x2: p.x, y2: p.y };
+    draw();
+  });
+  canvas.addEventListener('pointermove', (event) => {
+    if (!state.drag) return;
+    const p = at(event);
+    state.drag.x2 = p.x;
+    state.drag.y2 = p.y;
+    draw();
+  });
+  const endDrag = (event) => {
+    if (!state.drag) return;
+    const p = at(event);
+    const r = state.drag;
+    r.x2 = p.x; r.y2 = p.y;
+    state.drag = null;
+    if (Math.abs(r.x2 - r.x1) > 0.005 && Math.abs(r.y2 - r.y1) > 0.005) state.rects.push(r);
+    sync();
+  };
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', () => { state.drag = null; draw(); });
+
+  tools.scale.addEventListener('click', () => setTool('scale'));
+  tools.exclude.addEventListener('click', () => setTool('exclude'));
+  $('manual-undo').addEventListener('click', () => { state.rects.pop(); sync(); });
+  $('manual-reset').addEventListener('click', () => { state.points = []; state.rects = []; setTool('scale'); sync(); });
+  length.addEventListener('input', sync);
+  window.addEventListener('resize', layout);
+
+  function setOn(on) {
+    state.on = on;
+    toggle.checked = on;
+    panel.hidden = !on;
+    $('manual-help').hidden = !on;
+    if (on) layout();
+    sync();
+  }
+  toggle.addEventListener('change', () => setOn(toggle.checked));
+
+  function load(file) {
+    if (state.url) URL.revokeObjectURL(state.url);
+    state.image = null;
+    state.url = null;
+    state.points = [];
+    state.rects = [];
+    state.drag = null;
+    if (file && /^image\//.test(file.type)) {
+      state.url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => { if (state.url && img.src === state.url) { state.image = img; layout(); sync(); } };
+      img.src = state.url;
+    }
+    if (ctx) sync();
+  }
+
+  function params() {
+    if (!ready()) return {};
+    const [a, b] = state.points;
+    const out = {
+      manual_scale: [a.x, a.y, b.x, b.y, lengthMm()],
+      keep_edge_cracks: edge.checked,
+      segmentation: rough.checked ? 'blackhat' : 'adaptive',
+    };
+    const t = Number(tilt.value);
+    if (tilt.value !== '' && Number.isFinite(t)) out.manual_scale_max_tilt_deg = t;
+    if (state.rects.length) {
+      out.exclude_regions = state.rects.map((r) => {
+        const x0 = Math.min(r.x1, r.x2); const x1 = Math.max(r.x1, r.x2);
+        const y0 = Math.min(r.y1, r.y2); const y1 = Math.max(r.y1, r.y2);
+        return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+      });
+    }
+    return out;
+  }
+
+  return {
+    get on() { return state.on; },
+    ready, load, params, setOn,
+  };
+})();
 
 ui.dropzone.addEventListener('click', () => ui.fileInput.click());
 ui.fileInput.addEventListener('change', () => setFile(ui.fileInput.files[0] ?? null));
@@ -180,7 +418,8 @@ ui.form.addEventListener('submit', async (event) => {
   setProgress(0, 'uploading');
   ui.status.textContent = 'queued';
   try {
-    const { job_id: jobId } = await api.submit(selectedFile, collectParams());
+    const params = manual.on ? { ...collectParams(), ...manual.params() } : collectParams();
+    const { job_id: jobId } = await api.submit(selectedFile, params);
     appendLog(`job ${jobId} accepted`);
     follow(jobId);
   } catch (error) {
@@ -217,7 +456,7 @@ function follow(jobId) {
 
 async function finish(jobId, event) {
   setProgress(100, event.status === 'done' ? 'complete' : 'failed');
-  ui.submit.disabled = !selectedFile;
+  refreshSubmit();
   let job;
   try { job = await api.job(jobId); } catch (error) { failed(error); return; }
   if (job.error) { failed(new ApiError(job.error, 500)); return; }
@@ -225,7 +464,7 @@ async function finish(jobId, event) {
 }
 
 function failed(error) {
-  ui.submit.disabled = !selectedFile;
+  refreshSubmit();
   ui.status.textContent = 'failed';
   const notice = el('div', 'notice notice--error');
   notice.append(el('strong', null, error.code ?? 'error'), ' ', error.message ?? String(error));
@@ -260,6 +499,11 @@ const REFUSAL_ADVICE = {
     'Move closer so the crack spans more pixels, or use a longer lens.',
     'A width finer than the blur in the photograph cannot be recovered from it by any method.'],
   EMPTY_INPUT: ['That file did not decode. Try an MP4 or a JPEG.'],
+  NO_CRACK_FOUND: [
+    'Check that no leave-out box covers the crack itself.',
+    'If the crack runs past the edge of the photo, tick "Crack runs off the photo".',
+    'Try with "Rough real surface" switched the other way, or lower "Shortest crack to report" in Survey settings.',
+  ],
 };
 
 function renderReport(record) {
@@ -271,8 +515,18 @@ function renderReport(record) {
   $('stat-frames').textContent = `${metrics.stations ?? 0} of ${metrics.frames_read ?? 0}`;
 
   const measured = results.filter((r) => r.measurable);
+  if (metrics.scale_source === 'manual') nodes.push(manualScaleNotice(record));
   if (!measured.length) {
-    nodes.push(refusalPanel(refusals[0] ?? results.find((r) => r.refusal)?.refusal, metrics, record));
+    let refusal = refusals[0] ?? results.find((r) => r.refusal)?.refusal;
+    if (!refusal && metrics.scale_source === 'manual' && !results.length) {
+      // The scale was accepted and nothing crack-like survived segmentation. Saying
+      // "re-shoot with the printed marker" here would point at the wrong problem.
+      refusal = {
+        code: 'NO_CRACK_FOUND',
+        message: `The scale from the two points was accepted (${mm((metrics.gates ?? []).find((g) => g.ok)?.px_per_mm, 2)} px/mm), but no crack long and dark enough to measure was found outside the areas left out.`,
+      };
+    }
+    nodes.push(refusalPanel(refusal, metrics, record));
   } else {
     nodes.push(kpiRow(measured, metrics, record));
   }
@@ -286,6 +540,24 @@ function renderReport(record) {
 
   ui.result.replaceChildren(...nodes.filter(Boolean));
   renderEvidence(record);
+}
+
+function manualScaleNotice(record) {
+  // A ruler clicked by hand is a weaker reference than the printed marker, and the
+  // report has to say so where it cannot be missed, not only in the JSON.
+  const tilt = record.params?.manual_scale_max_tilt_deg ?? 10;
+  const notice = el('div', 'notice');
+  notice.id = 'manual-scale-note';
+  notice.append(el('strong', null,
+    `Scale from two points on a reference, not the printed marker. Wider uncertainty; surface assumed within ${Number(tilt).toFixed(0)}° of square.`));
+  const warnings = record.warnings ?? [];
+  if (warnings.length) {
+    const list = el('ul');
+    list.id = 'run-warnings';
+    for (const line of warnings) list.append(el('li', null, line));
+    notice.append(list);
+  }
+  return notice;
 }
 
 function refusalPanel(refusal, metrics, record) {
@@ -375,11 +647,18 @@ function titleBlock(record, metrics) {
   const head = el('div', 'titleblock__head');
   head.append(el('span', null, `Survey ${record.run_id ?? ''}`), el('span', null, record.created_at?.slice(0, 19).replace('T', ' ') ?? ''));
   block.append(head);
+  const manualScale = gate.scale_source === 'manual';
   const rows = [
-    ['Scale reference', `${params.marker_dictionary ?? '—'}, id ${(gate.marker_ids ?? []).join(', ') || '—'}, ${params.marker_length_mm ?? '—'} mm as entered`],
+    manualScale
+      ? ['Scale reference', `two points on a reference in the photo, ${params.manual_scale?.[4] ?? '—'} mm apart as entered (no printed marker)`]
+      : ['Scale reference', `${params.marker_dictionary ?? '—'}, id ${(gate.marker_ids ?? []).join(', ') || '—'}, ${params.marker_length_mm ?? '—'} mm as entered`],
     ['Recovered scale', gate.px_per_mm ? `${gate.px_per_mm.toFixed(3)} px/mm, ${(1000 / gate.px_per_mm).toFixed(0)} µm per pixel` : '—'],
-    ['Marker fit', gate.residual_px !== undefined && gate.marker_edge_px ? `${gate.residual_px} px residual on a ${gate.marker_edge_px.toFixed(0)} px edge` : '—'],
-    ['Surface off square', gate.apparent_tilt_deg !== undefined && gate.apparent_tilt_deg !== null ? `${gate.apparent_tilt_deg.toFixed(0)}° apparent foreshortening` : '—'],
+    manualScale
+      ? ['Point accuracy', gate.marker_edge_px ? `±${gate.residual_px ?? '—'} px per point on a ${gate.marker_edge_px.toFixed(0)} px span` : '—']
+      : ['Marker fit', gate.residual_px !== undefined && gate.marker_edge_px ? `${gate.residual_px} px residual on a ${gate.marker_edge_px.toFixed(0)} px edge` : '—'],
+    manualScale
+      ? ['Surface off square', `not measured; assumed within ${params.manual_scale_max_tilt_deg ?? 10}° and charged to the uncertainty`]
+      : ['Surface off square', gate.apparent_tilt_deg !== undefined && gate.apparent_tilt_deg !== null ? `${gate.apparent_tilt_deg.toFixed(0)}° apparent foreshortening` : '—'],
     ['Stand-off assumed', `${params.working_distance_mm ?? '—'} mm, with ${params.coplanarity_mm ?? '—'} mm of card-to-crack offset`],
     ['Estimator', `${(params.estimator ?? '').replace(/_/g, ' ')}, k=${params.coverage_factor ?? 2}`],
     ['Calibration', calibration.ok ? `passed ${calibration.checked_at}, worst line ${calibration.worst_error_pct}% of ${calibration.tolerance_pct}%` : 'not verified'],
@@ -629,6 +908,8 @@ function renderEvidence(record) {
 async function runSample(entry) {
   const response = await fetch(`/api/samples/${entry.file}`);
   const blob = await response.blob();
+  // The bundled samples carry the printed marker, so they always run the marker flow.
+  manual.setOn(false);
   setFile(new File([blob], entry.file, { type: blob.type }), `${entry.title}`);
   ui.form.requestSubmit();
 }
