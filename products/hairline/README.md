@@ -46,8 +46,7 @@ And then the part that matters most:
 
 ## Why refusal is the feature
 
-records what happened on the first attempt at this
-problem: a crack-width routine filled an open contour and took the maximum of the
+On our first attempt at this problem, a crack-width routine filled an open contour and took the maximum of the
 distance transform. It reported **283 mm for a 0.75 mm crack**, a factor of 380.
 Nothing crashed. Nothing warned. The number looked like a number.
 
@@ -78,6 +77,31 @@ The last row is the one worth looking at: an uncertainty that does not cover the
 is decoration. The declined readings are counted rather than dropped, and the method,
 the full 1,312-row sweep and the plots are in
 [`docs/evaluation.md`](docs/evaluation.md).
+
+## Photos with a ruler instead of the marker
+
+Public crack photos never contain Hairline's marker, so on their own they all end in
+`NO_MARKER`. Many inspection photos do have a ruler, gauge card or crack monitor in
+frame. In manual scale mode you give two points on that reference and the distance
+between them; in the web app, tick "No printed marker? Use a ruler in the photo".
+
+The scale is weaker than the marker's and the report says so. The uncertainty charges
+`2 × click error / span` for the two points and `1/cos(tilt) − 1` for a tilt nobody
+measured (10° by default), and lens blur falls back to a stated default. Boxes drawn
+over the ruler, card and writing keep them out of detection, and a black-hat mode
+handles rough render where the default threshold breaks a crack apart.
+
+Those settings were tuned on 16 real photos with no scale and then frozen before two
+held-out photos with a scale were run once. One gave three measured runs and three
+refusals; the other found nothing. Neither has a true width, so neither is an accuracy
+result. Details are in [`docs/evaluation.md`](docs/evaluation.md) §9 and
+[`eval/real_dev/`](eval/real_dev/).
+
+```bash
+products/hairline/.venv/bin/python -m hairline.cli measure photo.jpg \
+  --scale 0.644,0.820,0.986,0.885,80 --exclude "0,0.53;1,0.53;1,1;0,1" \
+  --keep-edge-cracks --segmentation blackhat --expected-width-mm 0.3 --out /tmp/hairline
+```
 
 ## Pinned dependencies
 

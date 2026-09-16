@@ -35,6 +35,10 @@ def _measure(args: argparse.Namespace) -> int:
         ]
     if args.keep_edge_cracks:
         extra["keep_edge_cracks"] = True
+    if args.segmentation:
+        extra["segmentation"] = args.segmentation
+    if args.expected_width_mm is not None:
+        extra["expected_width_mm"] = args.expected_width_mm
     params = SurveyParams.from_request({
         "marker_length_mm": args.marker_mm,
         "estimator": args.estimator,
@@ -133,6 +137,10 @@ def main(argv: list[str] | None = None) -> int:
                          help="polygon to leave out of crack finding, e.g. the ruler")
     measure.add_argument("--keep-edge-cracks", action="store_true",
                          help="measure cracks that leave the frame on their interior only")
+    measure.add_argument("--segmentation", choices=("adaptive", "blackhat"),
+                         help="blackhat suits rough real surfaces; adaptive is the default")
+    measure.add_argument("--expected-width-mm", type=float,
+                         help="rough crack width you expect, which sizes the filters")
     measure.set_defaults(func=_measure)
 
     sheets = sub.add_parser("sheets", help="write the printable marker and calibration target")
