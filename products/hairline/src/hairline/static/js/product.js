@@ -130,6 +130,7 @@ const manual = (() => {
   const status = $('manual-status');
   const length = $('manual-length');
   const tilt = $('manual-tilt');
+  const expectedWidth = $('ms-expected-width');
   const edge = $('manual-edge');
   const rough = $('manual-rough');
   const tools = { scale: $('tool-scale'), exclude: $('tool-exclude') };
@@ -332,6 +333,8 @@ const manual = (() => {
     };
     const t = Number(tilt.value);
     if (tilt.value !== '' && Number.isFinite(t)) out.manual_scale_max_tilt_deg = t;
+    const w = Number(expectedWidth.value);
+    if (expectedWidth.value !== '' && Number.isFinite(w) && w > 0) out.expected_width_mm = w;
     if (state.rects.length) {
       out.exclude_regions = state.rects.map((r) => {
         const x0 = Math.min(r.x1, r.x2); const x1 = Math.max(r.x1, r.x2);
