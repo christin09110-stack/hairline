@@ -142,7 +142,7 @@ percent into every width in the report and nothing downstream can detect it.
 products/hairline/.venv/bin/python -m pytest products/hairline/tests -q
 ```
 
-**108 tests.** They assert measured millimetres against drawn millimetres with real
+**145 tests.** They assert measured millimetres against drawn millimetres with real
 tolerances, check that the stated uncertainty actually covers the error, fire each
 refusal path on a scene built to trigger it, and include a source-level guard that no
 filled contour is ever used to measure a thin feature — the bug that produced 283 mm

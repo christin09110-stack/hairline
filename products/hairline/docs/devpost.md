@@ -158,7 +158,7 @@ Per function, Graviton4 against x86: `adaptiveThreshold` 1.65× faster, `findCon
 1.08×. The speedup lands on the per-pixel kernel KleidiCV accelerates, and hardly at
 all on the sequential contour trace.
 
-**Testing.** 108 tests assert measured millimetres against drawn millimetres, check that
+**Testing.** 145 tests assert measured millimetres against drawn millimetres, check that
 the stated uncertainty covers the error, and fire every refusal path. A calibration gate
 renders the printable calibration card, measures its lines, and blocks the image build
 if it can't reproduce them.
