@@ -378,3 +378,129 @@ correction is calibrated on.
 **No outcome claim.** There is no published trial of a deployed camera inspection
 system improving a real outcome, in this field or any next to it, and nothing here
 suggests otherwise.
+
+---
+
+## 9. Real photographs with a manual scale
+
+Sections 1 to 8 are synthetic. This section is the first contact with real photographs,
+and it is small: two test photos. Read it as a check that the pipeline runs on a real
+surface and says sensible things. It is not an accuracy figure. Neither photo comes
+with a measured ground-truth width, so no error or coverage number can be computed from
+them, and none is claimed.
+
+### 9.1 Why marker-less photos need their own mode
+
+The default pipeline needs Hairline's printed ArUco card in the frame, and it refuses
+anything without one before crack detection even starts. No public photo of a crack has
+that card in it. We ran every real image we had through the CLI and the live service
+with default settings, and every one of them ended in `NO_MARKER`. The refusal is
+correct, and it also means a real crack never got measured.
+
+Plenty of real inspection photos do carry a scale, though, just not ours: a ruler, a
+crack-width gauge, a tell-tale crack monitor with a printed grid. The manual scale mode
+(commit `1d2e307`) uses one of those. The operator picks two points on the reference
+and enters the distance between them in millimetres. The points are fractions of the
+frame's width and height, so the same numbers work at any resolution. The operator also
+outlines the reference so its printed lines are not measured as cracks, since a ruler's
+graduations pass every crack filter we have.
+
+The same commit adds **black-hat segmentation** (`segmentation="blackhat"`). The
+adaptive threshold was tuned on smooth synthetic concrete. On real pebbledash and
+painted render its local mean follows the texture, the crack breaks into hundreds of
+fragments, and none of them survives the length filter. A morphological black-hat with
+an element a few crack widths across keeps only what is darker than its surroundings at
+that scale, and hysteresis then grows strong seeds along weaker continuations. The
+default is still `adaptive`, so every synthetic number above still stands.
+
+### 9.2 Development and test split
+
+Tuning used a separate development set of real photographs that carry **no scale at
+all**, so nothing tuned on them could have been fitted to a width.
+[PENDING: dev set size and what was tuned, from `eval/real_dev/README.md` and
+`eval/real_dev/results.json`.]
+
+Two photos were held back as the test set. Both show a crack next to a reference of
+known size, and neither was used while tuning:
+
+| Test photo | Reference in frame | Licence |
+|---|---|---|
+| `Crack_DSC07068.JPG`, IJD Dublin | Avongard crack card | Public domain |
+| `Crack_monitor_in_Dnipro.jpg`, Alex Blokha | crack monitor | CC BY-SA 4.0 |
+
+Run records for both are kept outside the repository with the other real footage,
+because the images are not ours to redistribute here: `media/real/hairline/scaled/runs/{dsc07068,dnipro}/run.json`.
+
+### 9.3 The uncertainty model for a two-point scale
+
+Two points give a scale and nothing else. A printed marker gives a homography, a fit
+residual, a tilt and a measured blur. Two clicks give none of those, so the budget
+charges for each thing it cannot see.
+
+**Click error.** Each point can be off by `manual_scale_click_px` from where the
+operator meant it. At worst the two errors add along the line, so the span moves by up
+to twice that:
+
+    u_click = 2 × click_px / span_px
+
+**Unmeasured tilt.** A two-point scale is isotropic and assumes the surface is square to
+the camera. The operator states the largest tilt they will vouch for,
+`manual_scale_max_tilt_deg` (default 10°). A surface that far off square foreshortens
+by up to
+
+    u_tilt = 1 / cos(tilt) − 1
+
+which is 1.54% at 10°. The two terms are added rather than combined in quadrature,
+because nothing in a single view can separate them:
+
+    scale_rel = max(0.4%, u_click + u_tilt)
+
+That scale term then goes into the same budget as any other reading, next to
+coplanarity, sampling, quantisation and estimator noise, and it is reported at k = 2.
+
+**Blur is a default.** With no marker there is no printed step edge to measure the lens
+blur from. The pipeline uses sigma = 0.9 px with a standard uncertainty of 0.25 px and
+says so in the caption of every overlay: "blur sigma 0.90 px from default (no marker)".
+The resolution gate stays at max(4 px, 4.25 × sigma), and at the default that is the
+4 px floor.
+
+### 9.4 Results on the two test photos
+
+[PENDING: filled in from the two `run.json` files once the final runs land.]
+
+| | DSC07068 (Avongard card) | Dnipro (crack monitor) |
+|---|---|---|
+| Reference length used | [PENDING] | [PENDING] |
+| Span between the two points | [PENDING] px | [PENDING] px |
+| Click error allowed | [PENDING] px | [PENDING] px |
+| Scale | [PENDING] px/mm | [PENDING] px/mm |
+| Scale uncertainty (click + tilt) | [PENDING] | [PENDING] |
+| Finest measurable width at the 4 px floor | [PENDING] mm | [PENDING] mm |
+| Cracks found | [PENDING] | [PENDING] |
+| Measured, width p95 ± expanded uncertainty | [PENDING] | [PENDING] |
+| Refused, by code | [PENDING] | [PENDING] |
+
+### 9.5 Limitations of this mode
+
+**Blur is assumed, not measured.** The blur correction and the resolution gate both run
+off a default sigma. If the lens was softer than 0.9 px, narrow cracks read wide and the
+gate lets through cracks it should refuse. The 0.25 px uncertainty on sigma widens the
+interval near the floor, but it cannot fix a sigma that is simply wrong.
+
+**Lengths are lower bounds when a crack leaves the frame.** Both test photos are close
+crops of a crack that runs beyond the picture. With `keep_edge_cracks`, a band along the
+frame edge is blanked before crack finding, so each width profile is complete and the
+crack is measured on its interior only. Its length is then the part inside the band, and
+the run record carries a warning saying so.
+
+**A hand-held card may not lie in the plane of the crack.** A crack card held up to a
+wall, or a monitor screwed across a crack on a rough surface, can stand proud of the
+surface or sit at an angle to it. The coplanarity term covers a stated offset (2 mm at
+350 mm by default). It cannot detect a card that was actually tilted towards the
+camera, and it has no way to tell that from a tilted wall. The tilt allowance is the
+operator's promise, not a measurement.
+
+**Two photos is not an evaluation.** They show that the mode runs end to end on real
+surfaces and that the output reads sensibly against the reference in frame. Accuracy on
+real concrete still needs the check in §8: print the calibration target, photograph it,
+and compare against the widths printed on it.
