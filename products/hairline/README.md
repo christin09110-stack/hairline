@@ -142,10 +142,22 @@ percent into every width in the report and nothing downstream can detect it.
 products/hairline/.venv/bin/python -m pytest products/hairline/tests -q
 ```
 
-The suite asserts measured millimetres against drawn millimetres with real
-tolerances, checks that the stated uncertainty actually covers the error, checks
-each refusal path fires on a scene built to trigger it, and includes a source-level
-guard that no filled contour is ever used to measure a thin feature.
+**108 tests.** They assert measured millimetres against drawn millimetres with real
+tolerances, check that the stated uncertainty actually covers the error, fire each
+refusal path on a scene built to trigger it, and include a source-level guard that no
+filled contour is ever used to measure a thin feature — the bug that produced 283 mm
+for a 0.75 mm crack is kept executable next to that guard.
+
+The one to run on its own is the calibration gate:
+
+```bash
+products/hairline/.venv/bin/python -m pytest \
+  products/hairline/tests/test_calibration_gate.py -q
+```
+
+It photographs a card of printed lines whose widths are written on it and checks each
+one comes back with that width. If it fails, the build fails and the service refuses to
+publish any width at all.
 
 Re-run the evaluation sweep (about 12 minutes, it renders every scene):
 
