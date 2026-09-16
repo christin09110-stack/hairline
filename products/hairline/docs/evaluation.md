@@ -84,28 +84,29 @@ That leaves a population of **266**.
 | | |
 |---|---|
 | Population | 266 crack readings attempted |
-| **Measured** | **108** |
-| **Declined** | **158 (59%)** |
-| Median signed error | **−0.37%** |
-| Median absolute error | **0.53%**, which is **6 micrometres** |
-| Absolute error, 95th percentile | **4.3%**, which is **0.051 mm** |
-| Worst single error | **13.2%**, which is **0.13 mm** |
-| Central 68% of errors | −0.97% to −0.04% |
-| **Stated 95% interval contained the truth** | **95.4%** against a nominal 95% |
+| **Measured** | **103** |
+| **Declined** | **163 (61%)** |
+| Median signed error | **−0.61%** |
+| Median absolute error | **0.61%**, which is **6 micrometres** |
+| Absolute error, 95th percentile | **2.1%**, which is **0.036 mm** |
+| Worst single error | **5.6%**, which is **0.056 mm** |
+| Central 68% of errors | −1.02% to −0.19% |
+| **Stated 95% interval contained the truth** | **98.1%** against a nominal 95% |
 
 That last row is the one we would ask a judge to look at. An uncertainty that does not
-cover the error is decoration. 95.4% against a nominal 95%, over 108 readings, means
-the interval is honest rather than decorative — it is neither optimistic nor padded.
+cover the error is decoration. 98.1% against a nominal 95%, over 103 readings, means
+the interval is honest — if anything slightly conservative, which is the direction an
+instrument should err in.
 
-**59% of a deliberately hostile sweep was declined**, by name:
+**61% of a deliberately hostile sweep was declined**, by name:
 
 | Refusal | Rows | What it means |
 |---|---:|---|
-| `BELOW_RESOLUTION` | 103 | the crack is finer than this photograph can resolve; an upper bound is reported instead |
+| `BELOW_RESOLUTION` | 108 | the crack is finer than this photograph can resolve; an upper bound is reported instead |
 | `NO_FIDUCIAL` | 32 | the marker was not usable, so there is no scale |
 | `NOT_DETECTED` | 23 | segmentation found nothing at that crack's location |
 
-Those 158 are not failures. The sweep deliberately includes a 0.15 mm crack
+Those 163 are not failures. The sweep deliberately includes a 0.15 mm crack
 photographed from a metre away, which no method can measure, and the correct answer
 there is a refusal with a bound.
 
@@ -138,13 +139,21 @@ the tail of large errors ends:
 | `w/σ ≥ 2.5` | 149 | −0.62% | 242% | 92.6% |
 | `w/σ ≥ 3.0` | 113 | −0.62% | 149% | 96.5% |
 | `w/σ ≥ 3.5` | 102 | −0.61% | 7.5% | 98.0% |
-| **`w/σ ≥ 4.25`** | — | — | **13.2%** | **95.4%** |
+| **`w/σ ≥ 4.25`, shipped** | **103** | **−0.61%** | **5.6%** | **98.1%** |
 
-The last row is the shipped configuration measured on the final, larger sweep; the
-rows above it are from the tuning run that chose the value, on the sweep as it stood
-then. The shape is what matters: the tail collapses between 3.5 and 4.25 and stays
-collapsed, and every reading in the gap between 4.00 and 4.25 was already labelled
-low confidence. An absolute floor of 4 px sits underneath the ratio, because on a
+The first four rows are the tuning run that chose the value, on the sweep as it stood
+then; the last is the shipped configuration on the final sweep. The shape is what
+matters: the tail collapses between 3.5 and 4.25 and stays collapsed.
+
+**One decision underneath that table was a bug for a while, and it is worth the
+paragraph.** The floor was first applied per width sample rather than per crack. For a
+crack sitting just under the floor that discards the samples which measured narrow and
+keeps the ones which measured wide, so the crack comes back *measured*, from a biased
+subset: a 0.35 mm crack read 0.382 mm, nine percent high, where it should have been
+refused. Resolvability is a property of the crack and the frame, not of one noisy
+sample. It is now decided once, on the median of every sample, and then every sample is
+kept or none are. Fixing it moved the sweep's worst error from 13.2% to 5.6% and its
+interval coverage from 95.4% to 98.1%, which is most of what the two numbers are worth. An absolute floor of 4 px sits underneath the ratio, because on a
 compressed video the marker's edges read sharper than the lens really is — the bundled
 walk-past measures sigma at 0.57 px where its frames were rendered with 0.9 px of
 defocus, since the codec rings the very edges the estimate is calibrated on.
@@ -178,29 +187,34 @@ Same population, same segmentation, paired.
 
 | Estimator | Measured | Median | Central 68% | Worst | abs p95 | Coverage |
 |---|---:|---:|---:|---:|---:|---:|
-| **`blur_corrected`** (default) | 108 | **−0.37%** | −0.97 to −0.04% | **13.2%** | **0.051 mm** | **95.4%** |
-| `halfdepth` | 110 | −0.26% | −0.88 to +0.99% | 15.0% | 0.054 mm | 93.6% |
-| `area_ratio` | 175 | −0.95% | −3.75 to +116% | 563% | 0.736 mm | 48.6% |
-| `distance_transform` | 147 | +1.11% | −8.40 to +48.7% | 203% | 0.284 mm | 27.9% |
+| **`blur_corrected`** (default) | 103 | −0.61% | −1.02 to −0.19% | 5.6% | 0.036 mm | 98.1% |
+| `halfdepth` | 103 | −0.31% | −0.88 to +0.43% | 4.5% | 0.032 mm | 98.1% |
+| `area_ratio` | 98 | −3.60% | −4.95 to −3.17% | 10.1% | 0.109 mm | 81.6% |
+| `distance_transform` | 110 | −4.53% | −8.57 to +3.52% | 79.1% | 0.235 mm | 36.4% |
 
-Three things to take from this table.
+Three things to take from this table, and the first is not the one we expected.
 
-**`blur_corrected` and `halfdepth` are close on accepted readings, and that is the
-point.** The correction is largest exactly where the gate refuses, so on anything
-Hairline reports they agree to a few tens of micrometres. What the correction buys is
-not accuracy on good frames; it is the ability to *decide*. It is what tells the tool
-where the raw reading would start inventing width, which is the previous section.
+**`halfdepth` is marginally the better of the top two on accepted readings, and that
+does not make it the right default.** Median −0.31% against −0.61%, worst 4.5% against
+5.6%. The reason is circular in a way worth stating: the gate that decided which
+readings are in this table is itself derived from the blur model, and it has already
+removed every case where the raw half-depth reading fails. Inside the fence the two
+agree to a few tens of micrometres; outside it, §3 shows half-depth returning 0.311 mm
+for a 0.20 mm crack. What the correction buys is not accuracy on good frames. It is
+the fence. It is also what carries the blur-calibration term in the uncertainty
+budget, which is why the two estimators reach the same 98.1% coverage by different
+routes.
 
-**`area_ratio` accepts the most and is the worst by a wide margin.** The
-blur-invariant integral `A/D = w/erf(w/2√2σ)` is elegant and, in practice, noise
-inflates the observed depth `D` and the width follows. Coverage of 48.6% means its
-stated interval is wrong about half the time. It is in the repository because knowing
-which good idea does not survive contact with a sensor is worth as much as knowing
-which one does.
+**`area_ratio` is biased 3.6% low with 81.6% coverage.** The blur-invariant integral
+`A/D = w/erf(w/2√2σ)` is elegant and, in practice, sensor noise inflates the observed
+depth `D` and the width follows it down. It is in the repository because knowing which
+good idea does not survive contact with a sensor is worth as much as knowing which one
+does.
 
-**`distance_transform` has 27.9% coverage.** The width a binary mask implies moves
-with wherever the threshold happened to fall, and its spread does not know that. It is
-carried as a cross-check in every run record and it is never the answer.
+**`distance_transform` has 36.4% coverage and a 79% worst case.** The width a binary
+mask implies moves with wherever the threshold happened to fall, and its spread does
+not know that. It is carried as a cross-check in every run record and it is never the
+answer.
 
 ---
 
@@ -210,13 +224,13 @@ carried as a cross-check in every run record and it is never the answer.
 
 | Axis | Measured / attempted | Median error | Worst |
 |---|---:|---:|---:|
-| Reference | 8 / 14 | −0.27% | 0.9% |
-| Stand-off | 18 / 44 | −0.41% | 2.9% |
-| View angle | 22 / 36 | −0.39% | 1.1% |
-| Defocus | 14 / 35 | −0.13% | 8.6% |
-| Lighting | 20 / 35 | −0.73% | 5.6% |
-| Sensor noise | 8 / 12 | −0.45% | 1.5% |
-| All axes combined | 18 / 90 | −0.71% | 13.2% |
+| Reference | 8 / 14 | −0.39% | 0.9% |
+| Stand-off | 18 / 44 | −0.56% | 2.0% |
+| View angle | 22 / 36 | −0.43% | 1.1% |
+| Defocus | 12 / 35 | −0.27% | 2.8% |
+| Lighting | 20 / 35 | −0.87% | 5.6% |
+| Sensor noise | 8 / 12 | −0.95% | 2.1% |
+| All axes combined | 15 / 90 | −0.88% | 2.8% |
 
 ![Error against viewing angle](../eval/out/error-vs-angle.svg)
 ![Error against defocus](../eval/out/error-vs-blur.svg)
@@ -226,9 +240,11 @@ error at 50 degrees of apparent foreshortening is indistinguishable from the err
 square on, because the measurement is taken along the true perpendicular on the wall
 and converted with the local scale in that direction.
 
-**Defocus and the combined block hold the worst cases**, which is consistent with
-§3 — blur is the variable the accuracy depends on, and the combined block is where
-blur, angle and stand-off conspire.
+**No axis holds a worst case above 5.6%**, and the one that does is lighting, not
+defocus. Once the gate refuses everything the blur cannot carry, blur stops being the
+variable that drives the residual error and exposure takes over: the 5.6% row is the
+brightest, most strongly graded scene in the sweep, where the adaptive threshold's
+measured constant is working hardest.
 
 **Stand-off decides what is measurable, not how accurate it is.** At 150 mm the tool
 measures a 0.20 mm crack to +0.5%; at 1000 mm it declines everything under about
@@ -267,15 +283,33 @@ with the right reason instead of returning a number. `eval/sweep.py refusals` an
 `tests/test_refusals.py` both cover this; the tests are the authority because they
 assert the code, not just the absence of a number.
 
-| Scene | Expected | Result |
+**All eight scenes refuse, and each refuses with a code that names what was wrong.**
+
+| Scene | Observed | Result |
 |---|---|---|
-| No marker in frame | `NO_MARKER` | refused, and the message says a printed reference in the same plane is required |
-| Marker too far to resolve | `MARKER_TOO_SMALL` | refused |
+| No marker in frame | `NO_MARKER` | refused; the message says a printed reference in the same plane is required |
+| Marker 3.2 m away | `BELOW_RESOLUTION` | refused |
 | Surface almost edge on | `TOO_OBLIQUE` | refused |
-| Camera moving, heavy smear | `OUT_OF_FOCUS` / `MOTION_BLUR` | refused |
+| Camera moving, heavy smear | `NO_MARKER` | refused |
 | Frame badly under exposed | `UNDER_EXPOSED` | refused |
-| Frame blown out | `OVER_EXPOSED` / `CLIPPED` | refused |
+| Frame blown out | `OVER_EXPOSED` | refused |
 | Crack finer than resolvable | `BELOW_RESOLUTION` | refused, with an upper bound |
+| Surface texture, no measurable crack | `BELOW_RESOLUTION` | refused |
+
+Two of those rows are worth a note, because the first version of this table had the
+wrong expectation and the sweep was right.
+
+**"Marker 3.2 m away" was expected to give `MARKER_TOO_SMALL` and gives
+`BELOW_RESOLUTION`.** At that distance the 60 mm marker still spans 56 pixels, above
+the 48-pixel floor, so the scale is recovered perfectly well and it is the *cracks*
+that cannot be measured. The refusal arrives from the crack side rather than the
+marker side, and that is the more accurate answer. The expectation was changed to
+match the pipeline, not the other way round.
+
+**"Camera moving, heavy smear" gives `NO_MARKER` rather than `OUT_OF_FOCUS`.** At 14
+pixels of blur the ArUco detector stops finding the marker before the focus gate is
+reached. Both refusals are correct and the order they fire in is an implementation
+detail; the expectation names all the codes that would be right.
 
 Two properties are asserted rather than eyeballed:
 
@@ -283,6 +317,20 @@ Two properties are asserted rather than eyeballed:
   so there is no number anywhere for a caller to pick up by accident.
 - **The upper bound is actually an upper bound.** For every `BELOW_RESOLUTION` row in
   the sweep, the drawn width is below the bound the tool reported.
+
+**`TOO_FAINT` was added because of this sweep, not before it.** At a 900 mm stand-off
+on a wall whose cracks are all sub-pixel, two patches of surface texture survived every
+filter and were reported as a 2.0 mm and a 1.5 mm crack. They were wide enough to
+measure and only 20 and 22 grey levels darker than their surround, where the real
+cracks in the same sweep run 70 to 190. A crack is a shadowed void and its darkness
+does not fall off with distance; only the *observed* depth does, and only while the
+crack is unresolved, which the resolution gate has already excluded by that point. So a
+component that is wide enough to measure and barely darker than the wall is a stain, a
+shadow or texture, and it is now refused by name.
+
+A relative threshold could not have done it: at 900 mm the surface's own residual
+spread collapses to 1.0 grey level because the downsampling averages the texture away,
+so those artefacts read as 20 sigma — the same as a real crack.
 
 A frame can also be fine on its own and still be rejected: `MOTION_BLUR` is relative
 to the sharpest frame in the same clip, so the walk-past discards frames that would
@@ -308,6 +356,24 @@ plane as the crack. If the card sits on a proud patch, the scale is wrong by the
 offset over the working distance and nothing in a single view can detect it. It
 appears in the uncertainty budget as an assumption with a stated default, not as a
 measurement.
+
+**The blur estimate reads low below about one pixel, and that matters on video.**
+The 25-to-75 percent rise distance is measured by sampling the image along the
+marker's edge normal with bilinear interpolation, and bilinear reconstruction of a
+discrete edge is steeper than the continuous edge it came from. Measured on a frame
+rendered with 0.9 px of defocus, the estimator returns 0.58 px raw, 0.55 px after JPEG
+at quality 92, and 0.51 px after mp4v. The consequence is that the blur correction
+under-corrects, so widths near the resolution floor read slightly high rather than
+slightly low. On the bundled walk-past, drawn widths of 1.60, 0.80 and 0.50 mm come
+back as 1.65, 0.83 and 0.53 mm, which is +3 to +6 percent, against under 1 percent for
+uncompressed stills of the same wall.
+
+Two things follow, and both are already in the build. The absolute floor of 4 pixels
+exists exactly for this: below a measured sigma of about 0.94 px it is the floor that
+binds, not `4.25 x sigma`, so an under-read sigma cannot open the gate. And for the
+readings that matter, shoot stills or high-bitrate video rather than a compressed clip,
+because the compression does not blur the crack so much as sharpen the edge the
+correction is calibrated on.
 
 **No outcome claim.** There is no published trial of a deployed camera inspection
 system improving a real outcome, in this field or any next to it, and nothing here

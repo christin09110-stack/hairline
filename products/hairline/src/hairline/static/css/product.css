@@ -195,14 +195,16 @@ a { color: var(--accent); }
 .advice dt { color: var(--ink-dim); }
 .advice dd { margin: 0; font-variant-numeric: tabular-nums; }
 
-/* The calibration gate's own banner. It is red and it is at the top, because a
-   build that cannot measure a line it drew itself must not be quietly trusted. */
-.gate {
+/* The calibration gate's own banner. It is red and it is at the top, because a build
+   that cannot measure a line it drew itself must not be quietly trusted.
+   Named `notpublishing`, not `gate`: `.gate` is already the frames-not-used grid, and
+   the collision put a red alarm border around an ordinary panel. */
+.notpublishing {
   border: 2px solid var(--signal); background: var(--signal-wash);
   padding: var(--s4); margin-bottom: var(--s5);
 }
-.gate h2 { font-family: var(--font-doc); font-size: 21px; color: var(--signal); }
-.gate p { margin: var(--s2) 0 0; font-size: 14px; max-width: 70ch; }
+.notpublishing h2 { font-family: var(--font-doc); font-size: 21px; color: var(--signal); }
+.notpublishing p { margin: var(--s2) 0 0; font-size: 14px; max-width: 70ch; }
 
 .titleblock { border: 1px solid var(--ink); background: var(--surface); margin-top: var(--s4); }
 .titleblock__head {

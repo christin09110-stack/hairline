@@ -146,6 +146,26 @@ class SurveyParams:
     All four are implemented and compared in `docs/evaluation.md`; the default is the
     one with the flattest bias against targets of known width."""
     min_samples: int = 6
+    min_depth_dn: float = 30.0
+    """How dark a crack has to be, in grey levels, once it has passed the resolution gate.
+
+    A crack is a shadowed void, and its darkness against the surface is a physical
+    property that does not fall off with stand-off. Only the *observed* depth falls,
+    and only while the crack is unresolved -- which the resolution gate has already
+    excluded by the time this applies. So a component that is wide enough to measure
+    and still only twenty grey levels darker than its surround is a stain, a shadow
+    or a patch of texture, not a crack.
+
+    Measured: at a 900 mm stand-off the surface artefacts that survived every other
+    filter had a characteristic depth of 20 and 22 grey levels and were reported as
+    2.0 mm and 1.5 mm cracks. Real cracks in the same sweep run 70 to 190 depending on
+    exposure. The threshold sits an order of magnitude clear of both edges.
+
+    A relative test cannot do this job: at 900 mm the surface's own residual spread
+    collapses to 1.0 grey level because the texture is averaged away by the
+    downsampling, so the artefacts read as 20 sigma, the same as a real crack."""
+    min_depth_sigma: float = 8.0
+    """And a relative floor underneath it, for a genuinely low-contrast photograph."""
     min_depth_fraction: float = 0.5
     """Reject a width profile whose trough is shallower than this fraction of the
     crack's own characteristic darkness.

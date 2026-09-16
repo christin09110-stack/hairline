@@ -45,7 +45,7 @@ flowchart TB
         PR["cv2.remap sub-pixel profile<br/>across the crack"]
         IV["Invert the blurred-box model<br/>w from half-depth and sigma"]
         U["Uncertainty budget<br/>scale · coplanarity · sampling<br/>quantisation · noise · blur"]
-        R2(["REFUSE per crack<br/>BELOW_RESOLUTION with an upper bound<br/>UNCERTAINTY_TOO_LARGE<br/>TOO_FEW_SAMPLES"])
+        R2(["REFUSE per crack<br/>BELOW_RESOLUTION with an upper bound<br/>TOO_FAINT · UNCERTAINTY_TOO_LARGE<br/>TOO_FEW_SAMPLES"])
     end
 
     subgraph OUT["Output"]

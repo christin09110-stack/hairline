@@ -214,7 +214,7 @@ The last one is the interesting one. Near the resolution limit `∂w/∂σ` is l
 crack barely wider than the lens blur carries an uncertainty that says, correctly,
 that it cannot be known better than the blur is known. The interval widens by itself
 where the answer is weak. Across the sweep the stated 95% interval contained the truth
-**95.4% of the time**, against a nominal 95% — see §6.
+**98.1% of the time**, against a nominal 95% — see §6.
 
 ### 4.6 What OpenCV 5 specifically gave us
 
@@ -254,7 +254,25 @@ opencv 5.0.0 | machine aarch64 | threads 2 | baseline NEON FP16
 HAL: YES (carotene (ver 0.0.1) KleidiCV (ver 26.03))
 ```
 
-Every resource, every rate, and the two things that are blocked are in
+What the deployment actually took, because the write-up is more useful than the
+happy path:
+
+- The first launch pulled buildx's `buildcache` manifest instead of the image, because
+  the tag resolver took the most recently pushed tag and buildx pushes the cache last.
+  That instance was terminated two minutes later and the resolver now excludes it by
+  name.
+- Cloud-init's `apt-get install -y docker-ce docker-ce-cli containerd.io awscli caddy`
+  installed **none** of them, because a single apt transaction aborts entirely if one
+  package is unavailable, and `awscli` is not installable on arm64 from the enabled
+  repositories here. It is now one call per package, plus the official AWS CLI v2
+  installer.
+- Caddy refused to start on a one-line `reverse_proxy host { ... }`. Caddyfile braces
+  open and close on their own lines. `caddy validate` now runs before `systemctl`, so
+  a syntax error fails the boot loudly rather than leaving port 443 closed.
+
+All three are fixed in `infra/deploy.sh`, and each carries the reason in a comment
+rather than just the fix. Every resource, every rate, both things that are blocked, and
+every instance this product started with its start and stop times are in
 [`costs.md`](costs.md).
 
 ## 6. Evaluation
@@ -266,12 +284,12 @@ viewing angle, defocus, lighting and sensor noise:
 | | |
 |---|---|
 | Readings attempted | 266 |
-| Measured | 108 |
-| Declined, by name | 158, being 59% of a deliberately hostile sweep |
-| Median error | −0.37%, which is 6 micrometres |
-| Absolute error, 95th percentile | 4.3%, which is 0.051 mm |
-| Worst single error | 13.2% |
-| Stated 95% interval contained the truth | 95.4% against a nominal 95% |
+| Measured | 103 |
+| Declined, by name | 163, being 61% of a deliberately hostile sweep |
+| Median error | −0.61%, which is 6 micrometres |
+| Absolute error, 95th percentile | 2.1%, which is 0.036 mm |
+| Worst single error | 5.6% |
+| Stated 95% interval contained the truth | 98.1% against a nominal 95% |
 
 and, with the gate turned off on the same scenes, the raw half-depth reading returning
 **0.31 mm for a 0.20 mm crack** — while the corrected estimator reads 12% low on the
@@ -380,11 +398,42 @@ of confident wrong number this product exists to avoid. The review bands are an
 operator setting, they are labelled as such in the interface, and the default is not
 taken from any standard.
 
+**The blur estimate reads low below about one pixel, and that matters on video.**
+The 25-to-75 percent rise distance is measured by sampling the image along the
+marker's edge normal with bilinear interpolation, and bilinear reconstruction of a
+discrete edge is steeper than the continuous edge it came from. Measured on a frame
+rendered with 0.9 px of defocus, the estimator returns 0.58 px raw, 0.55 px after JPEG
+at quality 92, and 0.51 px after mp4v. The consequence is that the blur correction
+under-corrects, so widths near the resolution floor read slightly high rather than
+slightly low. On the bundled walk-past, drawn widths of 1.60, 0.80 and 0.50 mm come
+back as 1.65, 0.83 and 0.53 mm, which is +3 to +6 percent, against under 1 percent for
+uncompressed stills of the same wall.
+
+Two things follow, and both are already in the build. The absolute floor of 4 pixels
+exists exactly for this: below a measured sigma of about 0.94 px it is the floor that
+binds, not `4.25 x sigma`, so an under-read sigma cannot open the gate. And for the
+readings that matter, shoot stills or high-bitrate video rather than a compressed clip,
+because the compression does not blur the crack so much as sharpen the edge the
+correction is calibrated on.
+
 **Depth is invisible.** A 0.4 mm surface crack and a 0.4 mm crack through the section
 photograph identically. Width is one input to an assessment, not the assessment.
 
 **The demo instance is 2 vCPU.** A 4K frame takes a second or two of CPU. A real survey
 of a structure would be a batch job, not a web request.
+
+## 8.1 What we would do next, in order
+
+1. **Print the calibration target and photograph it.** Everything here is bounded by
+   rendered targets. That check costs ten minutes and a printer and would either
+   confirm the numbers or be the most interesting result in the project.
+2. **Run the COOL arm.** One console click and one command; the harness and the
+   launcher are committed and the other three arms are measured.
+3. **Measure a real crack next to a crack comparator card**, which is the only way to
+   compare against current practice, and the ASCE page gives no figure for how
+   accurate that practice is.
+4. **A stereo or two-view check on coplanarity**, which is the largest assumption in
+   the uncertainty budget and the only one a single view cannot test.
 
 ## 9. Responsible use
 
@@ -392,8 +441,8 @@ of a structure would be a batch job, not a web request.
 bands are operator-set. An engineer reads the schedule.
 
 **It refuses, loudly.** No marker, marker too small, surface too oblique, out of focus,
-exposure clipped, crack finer than the photograph can resolve, interval too wide — each
-is a named refusal with a reason and a next action. Refused rows stay in the exported
+exposure clipped, crack finer than the photograph can resolve, too faint to be a crack
+at all, interval too wide — each is a named refusal with a reason and a next action. Refused rows stay in the exported
 CSV with their reason, because a schedule that silently drops what it could not measure
 reads as a clean wall.
 

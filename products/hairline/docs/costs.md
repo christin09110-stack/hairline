@@ -3,7 +3,17 @@
 Region **us-east-1**, account **<aws-account-id>**. Everything created by this product is
 tagged `Project=opencv26` and `Product=hairline`.
 
-**Live endpoint:** _pending — filled in by `infra/deploy.sh` when the instance is up._
+**Live endpoint: <https://54-224-119-247.sslip.io>** (also plain
+<http://54.224.119.247>). A `c8g.large` — AWS Graviton4 — in us-east-1, instance
+`i-0a3a23ae96a63fe64`, running since 2026-09-16 04:11 UTC. **Still running**, which is
+the intention: it is the always-on demo endpoint.
+
+`/version` on it reports what a judge needs to check:
+
+```
+opencv 5.0.0 | machine aarch64 | threads 2 | baseline NEON FP16
+HAL: YES (carotene (ver 0.0.1) KleidiCV (ver 26.03))
+```
 
 ---
 
@@ -60,9 +70,33 @@ the Price List API and could not be confirmed programmatically.
 Every instance this product started, and when it stopped. An empty "terminated"
 column at submission time would be a bill still running.
 
-| Instance id | Type | Purpose | Started (UTC) | Terminated (UTC) | Hours | Cost |
+| Instance id | Type | Purpose | Started (UTC) | Terminated (UTC) | Wall | Cost |
 |---|---|---|---|---|---|---|
-| _filled in by the benchmark run_ | | | | | | |
+| `i-06462ffff58676723` | c8g.large | first deploy attempt, wrong image tag | 2026-09-16 04:07 | 2026-09-16 04:09 | 2 min | $0.003 |
+| `i-0a3a23ae96a63fe64` | c8g.large | **the live demo endpoint** | 2026-09-16 04:08 | **still running, by design** | — | $0.0798/hr |
+| `i-0a6e675cd2c58a483` | c8g.4xlarge (spot) | COOL benchmark, arm B | 2026-09-16 05:00:28 | 2026-09-16 05:09:22 | 9 min | $0.038 |
+| `i-036a60724d96032eb` | c7i.4xlarge (spot) | COOL benchmark, arm D | 2026-09-16 05:02:38 | 2026-09-16 05:09:22 | 7 min | $0.036 |
+
+Both benchmark instances are confirmed terminated; `bench/instances.sh list` returns
+nothing and `down` terminates by tag rather than by identifier, so a forgotten id
+cannot leave one billing. The first deploy attempt was terminated two minutes after
+launch: the tag resolver had picked buildx's `buildcache` manifest, which has no
+entrypoint, and relaunching was cleaner than patching a running box.
+
+**Total benchmark compute: $0.077.** The standing cost is the demo endpoint.
+
+### What is running right now
+
+One instance, and it is the one that is meant to be:
+
+```
+$ aws ec2 describe-instances --region us-east-1 \
+    --filters "Name=tag:Project,Values=opencv26"
+i-0a3a23ae96a63fe64   c8g.large   running   hairline-demo   2026-09-16T04:08:34+00:00
+```
+
+Nothing else. Both benchmark instances are terminated, and the first deploy attempt is
+terminated.
 
 ---
 
@@ -127,8 +161,12 @@ measurement campaign. The manual step is one page:
 *Running On-Demand Standard instances* quota (`L-1216C47A`) is **16 vCPUs, of which
 14 are already in use** by six instances belonging to other projects. A `c8g.large`
 fits exactly, with nothing to spare. A `c8g.4xlarge` or `c7i.4xlarge` is 16 vCPUs and
-cannot launch at all. An increase to 96 was requested on 2026-09-16 at 03:18 UTC,
-request `b1833d7d44174757a8c8e5721635679baJHwEe0t`, and is open as a support case.
+cannot launch at all. An increase to 96 was requested on 2026-09-16 at 03:18 UTC, request
+`b1833d7d44174757a8c8e5721635679baJHwEe0t`, and **was approved at about 06:40 UTC** —
+after the benchmark had already run. It ran on Spot instead, which has a separate and
+unused 32-vCPU quota and is the same hardware; the benchmark would not have been
+blocked either way, and the increase now removes the constraint for anyone
+reproducing it on demand.
 
 Both are recorded here rather than worked around, because the alternative was to
 report a benchmark arm that did not run.

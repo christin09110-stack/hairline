@@ -1,0 +1,9 @@
+case,expected,observed,cracks_measured,refused_correctly,message
+no marker in frame,NO_MARKER,NO_MARKER,0,True,no DICT_4X4_50 marker in this frame. Hairline cannot convert pixels to millimetres without a printed reference of known size in the same plane as the surface.
+marker too far to resolve,MARKER_TOO_SMALL|NO_MARKER|BELOW_RESOLUTION,BELOW_RESOLUTION,0,True,"the crack is visible but finer than this frame can measure; it is narrower than 5.02 mm. Move closer, or use a longer lens, so the crack spans at least 4.0 pixels."
+surface almost edge on,TOO_OBLIQUE,TOO_OBLIQUE,0,True,the surface is 73 degrees off square to the camera (limit 55). Foreshortening at this angle costs more resolution across the crack than the measurement can afford. Stand square to the wall and re-shoot.
+"camera moving, heavy motion blur",OUT_OF_FOCUS|MOTION_BLUR|NO_MARKER,NO_MARKER,0,True,no DICT_4X4_50 marker in this frame. Hairline cannot convert pixels to millimetres without a printed reference of known size in the same plane as the surface.
+frame badly under exposed,UNDER_EXPOSED|NO_MARKER,UNDER_EXPOSED,0,True,the frame is too dark to separate a crack from the surface (mean level 19)
+frame blown out,OVER_EXPOSED|CLIPPED|NO_MARKER,OVER_EXPOSED,0,True,the frame is washed out (mean level 248)
+crack finer than the frame can resolve,BELOW_RESOLUTION,BELOW_RESOLUTION,0,True,"the crack is visible but finer than this frame can measure; it is narrower than 1.48 mm. Move closer, or use a longer lens, so the crack spans at least 4.0 pixels."
+surface texture on a wall with no measurable crack,BELOW_RESOLUTION|TOO_FAINT,BELOW_RESOLUTION,0,True,"the crack is visible but finer than this frame can measure; it is narrower than 1.75 mm. Move closer, or use a longer lens, so the crack spans at least 4.0 pixels."

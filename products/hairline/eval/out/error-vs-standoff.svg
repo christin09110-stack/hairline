@@ -30,23 +30,23 @@
 <line x1="738.0" y1="348.0" x2="738.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
 <text x="738.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">1000</text>
 <line x1="58.0" y1="250.1" x2="738.0" y2="250.1" stroke="#12181D" stroke-width="1.4" stroke-dasharray="5 4"/>
-<polygon points="58.0,244.6 98.0,251.5 138.0,247.8 218.0,250.7 338.0,243.3 498.0,252.5 738.0,252.6 738.0,252.6 498.0,254.1 338.0,253.3 218.0,252.5 138.0,252.2 98.0,251.5 58.0,252.2" fill="#15618F" fill-opacity="0.14"/>
-<polyline points="58.0,248.5 98.0,251.5 138.0,250.0 218.0,251.6 338.0,248.4 498.0,253.3 738.0,252.6" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
-<circle cx="58.0" cy="248.5" r="3.4" fill="#15618F"/>
+<polygon points="58.0,248.9 98.0,251.5 138.0,251.3 218.0,251.2 338.0,252.0 498.0,252.7 738.0,252.6 738.0,252.6 498.0,254.9 338.0,253.3 218.0,253.2 138.0,256.5 98.0,251.5 58.0,252.2" fill="#15618F" fill-opacity="0.14"/>
+<polyline points="58.0,250.6 98.0,251.5 138.0,253.9 218.0,252.2 338.0,252.7 498.0,253.8 738.0,252.6" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="58.0" cy="250.6" r="3.4" fill="#15618F"/>
 <circle cx="98.0" cy="251.5" r="3.4" fill="#15618F"/>
-<circle cx="138.0" cy="250.0" r="3.4" fill="#15618F"/>
-<circle cx="218.0" cy="251.6" r="3.4" fill="#15618F"/>
-<circle cx="338.0" cy="248.4" r="3.4" fill="#15618F"/>
-<circle cx="498.0" cy="253.3" r="3.4" fill="#15618F"/>
+<circle cx="138.0" cy="253.9" r="3.4" fill="#15618F"/>
+<circle cx="218.0" cy="252.2" r="3.4" fill="#15618F"/>
+<circle cx="338.0" cy="252.7" r="3.4" fill="#15618F"/>
+<circle cx="498.0" cy="253.8" r="3.4" fill="#15618F"/>
 <circle cx="738.0" cy="252.6" r="3.4" fill="#15618F"/>
-<polygon points="58.0,243.4 98.0,224.0 138.0,248.0 218.0,247.9 338.0,242.3 498.0,250.7 738.0,251.4 738.0,251.4 498.0,251.9 338.0,253.2 218.0,252.4 138.0,252.2 98.0,246.3 58.0,252.2" fill="#8A5A06" fill-opacity="0.14"/>
-<polyline points="58.0,247.9 98.0,235.1 138.0,250.1 218.0,250.2 338.0,247.8 498.0,251.3 738.0,251.4" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round"/>
-<circle cx="58.0" cy="247.9" r="3.4" fill="#8A5A06"/>
-<circle cx="98.0" cy="235.1" r="3.4" fill="#8A5A06"/>
-<circle cx="138.0" cy="250.1" r="3.4" fill="#8A5A06"/>
-<circle cx="218.0" cy="250.2" r="3.4" fill="#8A5A06"/>
-<circle cx="338.0" cy="247.8" r="3.4" fill="#8A5A06"/>
-<circle cx="498.0" cy="251.3" r="3.4" fill="#8A5A06"/>
+<polygon points="58.0,245.0 98.0,251.5 138.0,250.5 218.0,248.8 338.0,247.1 498.0,251.0 738.0,251.4 738.0,251.4 498.0,251.9 338.0,253.2 218.0,252.4 138.0,252.3 98.0,251.5 58.0,252.2" fill="#8A5A06" fill-opacity="0.14"/>
+<polyline points="58.0,248.6 98.0,251.5 138.0,251.4 218.0,250.6 338.0,250.2 498.0,251.4 738.0,251.4" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="58.0" cy="248.6" r="3.4" fill="#8A5A06"/>
+<circle cx="98.0" cy="251.5" r="3.4" fill="#8A5A06"/>
+<circle cx="138.0" cy="251.4" r="3.4" fill="#8A5A06"/>
+<circle cx="218.0" cy="250.6" r="3.4" fill="#8A5A06"/>
+<circle cx="338.0" cy="250.2" r="3.4" fill="#8A5A06"/>
+<circle cx="498.0" cy="251.4" r="3.4" fill="#8A5A06"/>
 <circle cx="738.0" cy="251.4" r="3.4" fill="#8A5A06"/>
 <line x1="58.0" y1="348.0" x2="738.0" y2="348.0" stroke="#12181D" stroke-width="1.2"/>
 <text x="409" y="392" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">Camera stand-off (mm)</text>

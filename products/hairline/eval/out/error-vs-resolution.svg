@@ -34,32 +34,32 @@
 <line x1="738.0" y1="348.0" x2="738.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
 <text x="738.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">30</text>
 <line x1="58.0" y1="279.5" x2="738.0" y2="279.5" stroke="#12181D" stroke-width="1.4" stroke-dasharray="5 4"/>
-<polygon points="290.8,273.6 369.5,279.6 448.1,278.4 534.6,280.5 638.6,280.0 717.3,280.0 717.3,280.0 638.6,281.1 534.6,281.8 448.1,281.5 369.5,280.9 290.8,284.2" fill="#15618F" fill-opacity="0.16"/>
-<polyline points="290.8,280.4 369.5,279.6 448.1,278.6 534.6,280.5 638.6,280.3 717.3,280.0" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
-<circle cx="290.8" cy="280.4" r="3.4" fill="#15618F"/>
-<circle cx="369.5" cy="279.6" r="3.4" fill="#15618F"/>
-<circle cx="448.1" cy="278.6" r="3.4" fill="#15618F"/>
-<circle cx="534.6" cy="280.5" r="3.4" fill="#15618F"/>
+<polygon points="290.8,279.4 369.5,280.1 448.1,279.7 534.6,280.6 638.6,280.0 717.3,280.0 717.3,280.0 638.6,281.1 534.6,281.8 448.1,281.6 369.5,281.8 290.8,285.8" fill="#15618F" fill-opacity="0.16"/>
+<polyline points="290.8,283.1 369.5,281.1 448.1,281.0 534.6,281.3 638.6,280.3 717.3,280.0" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="290.8" cy="283.1" r="3.4" fill="#15618F"/>
+<circle cx="369.5" cy="281.1" r="3.4" fill="#15618F"/>
+<circle cx="448.1" cy="281.0" r="3.4" fill="#15618F"/>
+<circle cx="534.6" cy="281.3" r="3.4" fill="#15618F"/>
 <circle cx="638.6" cy="280.3" r="3.4" fill="#15618F"/>
 <circle cx="717.3" cy="280.0" r="3.4" fill="#15618F"/>
-<polyline points="290.8,276.8 369.5,277.4 448.1,278.3 534.6,280.5 638.6,280.2 717.3,280.0" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 4"/>
-<circle cx="290.8" cy="276.8" r="3.4" fill="#8A5A06"/>
-<circle cx="369.5" cy="277.4" r="3.4" fill="#8A5A06"/>
-<circle cx="448.1" cy="278.3" r="3.4" fill="#8A5A06"/>
-<circle cx="534.6" cy="280.5" r="3.4" fill="#8A5A06"/>
+<polyline points="290.8,280.0 369.5,279.5 448.1,280.6 534.6,281.3 638.6,280.2 717.3,280.0" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<circle cx="290.8" cy="280.0" r="3.4" fill="#8A5A06"/>
+<circle cx="369.5" cy="279.5" r="3.4" fill="#8A5A06"/>
+<circle cx="448.1" cy="280.6" r="3.4" fill="#8A5A06"/>
+<circle cx="534.6" cy="281.3" r="3.4" fill="#8A5A06"/>
 <circle cx="638.6" cy="280.2" r="3.4" fill="#8A5A06"/>
 <circle cx="717.3" cy="280.0" r="3.4" fill="#8A5A06"/>
-<polyline points="290.8,200.8 369.5,137.6 448.1,189.4 534.6,150.9 638.6,252.0" fill="none" stroke="#A8321F" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 4"/>
-<circle cx="290.8" cy="200.8" r="3.4" fill="#A8321F"/>
-<circle cx="369.5" cy="137.6" r="3.4" fill="#A8321F"/>
-<circle cx="448.1" cy="189.4" r="3.4" fill="#A8321F"/>
-<circle cx="534.6" cy="150.9" r="3.4" fill="#A8321F"/>
-<circle cx="638.6" cy="252.0" r="3.4" fill="#A8321F"/>
-<polyline points="290.8,72.6 369.5,192.5 448.1,285.8 534.6,295.1 638.6,294.0" fill="none" stroke="#4A7A63" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 4"/>
-<circle cx="290.8" cy="72.6" r="3.4" fill="#4A7A63"/>
-<circle cx="369.5" cy="192.5" r="3.4" fill="#4A7A63"/>
-<circle cx="448.1" cy="285.8" r="3.4" fill="#4A7A63"/>
-<circle cx="534.6" cy="295.1" r="3.4" fill="#4A7A63"/>
+<polyline points="290.8,291.5 369.5,288.0 448.1,288.1 534.6,288.1 638.6,287.8" fill="none" stroke="#A8321F" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<circle cx="290.8" cy="291.5" r="3.4" fill="#A8321F"/>
+<circle cx="369.5" cy="288.0" r="3.4" fill="#A8321F"/>
+<circle cx="448.1" cy="288.1" r="3.4" fill="#A8321F"/>
+<circle cx="534.6" cy="288.1" r="3.4" fill="#A8321F"/>
+<circle cx="638.6" cy="287.8" r="3.4" fill="#A8321F"/>
+<polyline points="290.8,175.0 369.5,264.5 448.1,289.2 534.6,297.9 638.6,294.0" fill="none" stroke="#4A7A63" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<circle cx="290.8" cy="175.0" r="3.4" fill="#4A7A63"/>
+<circle cx="369.5" cy="264.5" r="3.4" fill="#4A7A63"/>
+<circle cx="448.1" cy="289.2" r="3.4" fill="#4A7A63"/>
+<circle cx="534.6" cy="297.9" r="3.4" fill="#4A7A63"/>
 <circle cx="638.6" cy="294.0" r="3.4" fill="#4A7A63"/>
 <line x1="58.0" y1="348.0" x2="738.0" y2="348.0" stroke="#12181D" stroke-width="1.2"/>
 <text x="409" y="392" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">Pixels across the crack, along its true normal</text>

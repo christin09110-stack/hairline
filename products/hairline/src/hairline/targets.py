@@ -110,12 +110,12 @@ def _compact_target(spec: TargetSpec) -> tuple[np.ndarray, dict[str, Any]]:
     pitch = (spec.page_mm[1] - top - 8.0) / max(1, len(spec.widths_mm))
     x_mm = 8.0
     for i, width_mm in enumerate(spec.widths_mm):
-        width_px = max(1, int(round(width_mm * spec.px_per_mm)))
+        width_px = max(1, round(width_mm * spec.px_per_mm))
         actual_mm = width_px * spec.dot_mm
         y_mm = top + i * pitch
-        x0 = int(round(x_mm * spec.px_per_mm))
-        x1 = int(round((x_mm + spec.line_length_mm) * spec.px_per_mm))
-        y0 = int(round(y_mm * spec.px_per_mm))
+        x0 = round(x_mm * spec.px_per_mm)
+        x1 = round((x_mm + spec.line_length_mm) * spec.px_per_mm)
+        y0 = round(y_mm * spec.px_per_mm)
         page[y0 : y0 + width_px, x0:x1] = 0
         _label(page, spec, x_mm + spec.line_length_mm + 4.0, y_mm + 1.5,
                f"{actual_mm:.3f} mm", pt=7)

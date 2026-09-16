@@ -1,0 +1,66 @@
+[
+ {
+  "case": "no marker in frame",
+  "expected": "NO_MARKER",
+  "observed": "NO_MARKER",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "no DICT_4X4_50 marker in this frame. Hairline cannot convert pixels to millimetres without a printed reference of known size in the same plane as the surface."
+ },
+ {
+  "case": "marker too far to resolve",
+  "expected": "MARKER_TOO_SMALL|NO_MARKER|BELOW_RESOLUTION",
+  "observed": "BELOW_RESOLUTION",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "the crack is visible but finer than this frame can measure; it is narrower than 5.02 mm. Move closer, or use a longer lens, so the crack spans at least 4.0 pixels."
+ },
+ {
+  "case": "surface almost edge on",
+  "expected": "TOO_OBLIQUE",
+  "observed": "TOO_OBLIQUE",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "the surface is 73 degrees off square to the camera (limit 55). Foreshortening at this angle costs more resolution across the crack than the measurement can afford. Stand square to the wall and re-shoot."
+ },
+ {
+  "case": "camera moving, heavy motion blur",
+  "expected": "OUT_OF_FOCUS|MOTION_BLUR|NO_MARKER",
+  "observed": "NO_MARKER",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "no DICT_4X4_50 marker in this frame. Hairline cannot convert pixels to millimetres without a printed reference of known size in the same plane as the surface."
+ },
+ {
+  "case": "frame badly under exposed",
+  "expected": "UNDER_EXPOSED|NO_MARKER",
+  "observed": "UNDER_EXPOSED",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "the frame is too dark to separate a crack from the surface (mean level 19)"
+ },
+ {
+  "case": "frame blown out",
+  "expected": "OVER_EXPOSED|CLIPPED|NO_MARKER",
+  "observed": "OVER_EXPOSED",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "the frame is washed out (mean level 248)"
+ },
+ {
+  "case": "crack finer than the frame can resolve",
+  "expected": "BELOW_RESOLUTION",
+  "observed": "BELOW_RESOLUTION",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "the crack is visible but finer than this frame can measure; it is narrower than 1.48 mm. Move closer, or use a longer lens, so the crack spans at least 4.0 pixels."
+ },
+ {
+  "case": "surface texture on a wall with no measurable crack",
+  "expected": "BELOW_RESOLUTION|TOO_FAINT",
+  "observed": "BELOW_RESOLUTION",
+  "cracks_measured": 0,
+  "refused_correctly": true,
+  "message": "the crack is visible but finer than this frame can measure; it is narrower than 1.75 mm. Move closer, or use a longer lens, so the crack spans at least 4.0 pixels."
+ }
+]

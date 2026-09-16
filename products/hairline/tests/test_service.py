@@ -8,8 +8,7 @@ import time
 import cv2
 import pytest
 from fastapi.testclient import TestClient
-
-from hairline.service import app, schedule_csv
+from hairline.service import app
 from hairline.synth import CameraSpec, RenderOptions, render
 from tests.conftest import CLOSE_CAMERA, make_scene
 

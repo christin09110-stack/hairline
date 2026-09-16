@@ -9,6 +9,8 @@ photograph that cannot support one.
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import numpy as np
 import pytest
 from hairline.config import SurveyParams
@@ -135,6 +137,48 @@ class TestCrackLevelRefusals:
             assert result.p50_mm is None
             assert result.p95_mm is None
             assert result.max_mm is None
+
+    def test_a_wide_pale_component_is_refused_as_too_faint(self):
+        """The false positive the sweep found: texture measured as a 2 mm crack.
+
+        At a long stand-off the surface's own residual spread collapses, because the
+        downsampling averages the texture away, so a relative contrast test stops
+        separating a stain from a crack. Two patches of texture came back as a 2.0 mm
+        and a 1.5 mm crack that way. What separates them is absolute darkness: those
+        were 20 grey levels below their surround where a real crack runs 70 to 190.
+        """
+        from hairline.width import measure_component
+
+        scene = make_scene(widths=(0.6, 1.2, 1.8, 2.4))
+        bench = Bench(scene, CLOSE_CAMERA, RenderOptions(blur_px=0.9, noise_dn=2.0))
+        from hairline.segment import segment_cracks
+
+        seg = segment_cracks(
+            bench.image, bench.params, px_per_mm=bench.calibration.px_per_mm,
+            marker_corners=bench.corners,
+        )
+        assert seg.components, "the reference scene should still segment"
+
+        # Claim the surface is far noisier than it is. Every crack in the frame then
+        # fails the darkness test and every one must be refused rather than measured.
+        strict = replace(bench.params, min_depth_dn=400.0)
+        refused = [
+            measure_component(bench.image, c, bench.plane, strict,
+                              sigma_px=bench.sigma, scale_rel_uncertainty=bench.scale_rel,
+                              surface_sigma_dn=seg.residual_sigma)
+            for c in seg.components
+        ]
+        assert refused, "no components to test"
+        assert not [m for m in refused if m.ok], (
+            "a crack far paler than the threshold was still measured"
+        )
+        codes = {m.refusal.code for m in refused if m.refusal}
+        assert "TOO_FAINT" in codes, codes
+
+    def test_the_real_cracks_survive_the_faintness_gate(self, close_bench):
+        """And the gate must not be eating the cracks it is supposed to keep."""
+        for name, result in measure_all(close_bench).items():
+            assert result.ok, f"{name} was refused: {result.refusal}"
 
     def test_a_blank_surface_yields_no_cracks(self):
         bench = Bench(make_scene(widths=()), CLOSE_CAMERA, RenderOptions())

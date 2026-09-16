@@ -490,11 +490,12 @@ def _survey(
                     sigma_uncertainty_px=sigma_u,
                     scale_rel_uncertainty=scale_rel,
                     working_distance_mm=params.working_distance_mm,
+                    surface_sigma_dn=seg.residual_sigma,
                 )
                 if (
                     not measurement.ok
                     and measurement.refusal
-                    and measurement.refusal.code == "TOO_FEW_SAMPLES"
+                    and measurement.refusal.code in {"TOO_FEW_SAMPLES", "TOO_FAINT"}
                 ):
                     continue  # not a crack, not worth a row in the schedule
                 crack_index += 1

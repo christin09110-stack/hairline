@@ -13,7 +13,6 @@ says so. That is the difference between this product and the 283 mm reading for 
 from __future__ import annotations
 
 import pytest
-
 from hairline.calibration_gate import TOLERANCE_PCT, CalibrationReport, check, render_card
 from hairline.targets import COMPACT
 
@@ -140,6 +139,6 @@ class TestTheRenderedCard:
         from visioncore import detect_aruco
 
         frame, truth = render_card()
-        corners, ids = detect_aruco(frame, COMPACT.dictionary)
+        _corners, ids = detect_aruco(frame, COMPACT.dictionary)
         assert ids == [COMPACT.marker_id]
         assert truth["px_per_mm_at_centre"] > 5

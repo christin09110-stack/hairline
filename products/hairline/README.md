@@ -9,7 +9,9 @@ An entry in the OpenCV AI Competition 2026. It is also this workshop's bid for t
 thresholding and contour extraction on a 4K frame — is exactly what the Cloud
 Optimized OpenCV Library is built to accelerate. See [`docs/cool-benchmark.md`](docs/cool-benchmark.md).
 
-- **Live endpoint:** see [`docs/costs.md`](docs/costs.md) for the current URL.
+- **Live endpoint: <https://54-224-119-247.sslip.io>** — AWS Graviton4, `c8g.large`,
+  us-east-1. Three samples are bundled, so it works from a cold start with nothing
+  uploaded. `/version` prints the OpenCV build and the HAL it is running on.
 - **Technical report:** [`docs/report.md`](docs/report.md)
 - **Evaluation, with the numbers:** [`docs/evaluation.md`](docs/evaluation.md)
 - **Architecture diagrams:** [`docs/architecture.md`](docs/architecture.md)
@@ -65,12 +67,12 @@ lighting and sensor noise, with the default estimator and the default gates:
 | | | |
 |---|---|---|
 | Readings attempted | 266 | |
-| **Measured** | **108** | |
-| **Declined, by name, with a reason** | **158** | 59% of a deliberately hostile sweep |
-| Median error | **−0.37%** | 6 micrometres |
-| Absolute error, 95th percentile | **4.3%** | 0.051 mm |
-| Worst single error | **13.2%** | 0.13 mm |
-| **Stated 95% interval contained the truth** | **95.4%** | against a nominal 95% |
+| **Measured** | **103** | |
+| **Declined, by name, with a reason** | **163** | 61% of a deliberately hostile sweep |
+| Median error | **−0.61%** | 6 micrometres |
+| Absolute error, 95th percentile | **2.1%** | 0.036 mm |
+| Worst single error | **5.6%** | 0.056 mm |
+| **Stated 95% interval contained the truth** | **98.1%** | against a nominal 95% |
 
 The last row is the one worth looking at: an uncertainty that does not cover the error
 is decoration. The declined readings are counted rather than dropped, and the method,

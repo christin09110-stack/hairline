@@ -26,19 +26,19 @@
 <line x1="738.0" y1="348.0" x2="738.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
 <text x="738.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">4</text>
 <line x1="58.0" y1="250.1" x2="738.0" y2="250.1" stroke="#12181D" stroke-width="1.4" stroke-dasharray="5 4"/>
-<polygon points="58.0,247.9 135.7,250.7 252.3,235.0 446.6,222.1 738.0,239.1 738.0,239.1 446.6,245.2 252.3,253.6 135.7,252.5 58.0,252.2" fill="#15618F" fill-opacity="0.14"/>
-<polyline points="58.0,250.0 135.7,251.6 252.3,244.4 446.6,233.7 738.0,239.1" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
+<polygon points="58.0,247.9 135.7,251.2 252.3,252.8 446.6,250.7 738.0,239.1 738.0,239.1 446.6,250.7 252.3,253.8 135.7,253.2 58.0,252.2" fill="#15618F" fill-opacity="0.14"/>
+<polyline points="58.0,250.0 135.7,252.2 252.3,253.3 446.6,250.7 738.0,239.1" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
 <circle cx="58.0" cy="250.0" r="3.4" fill="#15618F"/>
-<circle cx="135.7" cy="251.6" r="3.4" fill="#15618F"/>
-<circle cx="252.3" cy="244.4" r="3.4" fill="#15618F"/>
-<circle cx="446.6" cy="233.7" r="3.4" fill="#15618F"/>
+<circle cx="135.7" cy="252.2" r="3.4" fill="#15618F"/>
+<circle cx="252.3" cy="253.3" r="3.4" fill="#15618F"/>
+<circle cx="446.6" cy="250.7" r="3.4" fill="#15618F"/>
 <circle cx="738.0" cy="239.1" r="3.4" fill="#15618F"/>
-<polygon points="58.0,247.9 135.7,247.9 252.3,237.6 446.6,221.9 738.0,236.9 738.0,236.9 446.6,245.1 252.3,253.4 135.7,252.4 58.0,252.0" fill="#8A5A06" fill-opacity="0.14"/>
-<polyline points="58.0,250.0 135.7,250.2 252.3,245.6 446.6,233.5 738.0,236.9" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round"/>
+<polygon points="58.0,247.9 135.7,248.8 252.3,252.7 446.6,250.6 738.0,236.9 738.0,236.9 446.6,250.6 252.3,253.5 135.7,252.4 58.0,252.0" fill="#8A5A06" fill-opacity="0.14"/>
+<polyline points="58.0,250.0 135.7,250.6 252.3,253.1 446.6,250.6 738.0,236.9" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round"/>
 <circle cx="58.0" cy="250.0" r="3.4" fill="#8A5A06"/>
-<circle cx="135.7" cy="250.2" r="3.4" fill="#8A5A06"/>
-<circle cx="252.3" cy="245.6" r="3.4" fill="#8A5A06"/>
-<circle cx="446.6" cy="233.5" r="3.4" fill="#8A5A06"/>
+<circle cx="135.7" cy="250.6" r="3.4" fill="#8A5A06"/>
+<circle cx="252.3" cy="253.1" r="3.4" fill="#8A5A06"/>
+<circle cx="446.6" cy="250.6" r="3.4" fill="#8A5A06"/>
 <circle cx="738.0" cy="236.9" r="3.4" fill="#8A5A06"/>
 <line x1="58.0" y1="348.0" x2="738.0" y2="348.0" stroke="#12181D" stroke-width="1.2"/>
 <text x="409" y="392" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">Defocus blur sigma (pixels)</text>

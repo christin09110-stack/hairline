@@ -29,7 +29,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from bench.workloads import Workload, register  # noqa: E402
+from bench.workloads import Workload, register
 
 # A 4K frame of concrete with four cracks and a marker, built from the same geometry
 # the product's own synthetic scenes use, but written out longhand so it depends on

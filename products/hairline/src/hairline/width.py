@@ -603,6 +603,7 @@ def measure_component(
     scale_rel_uncertainty: float,
     sigma_uncertainty_px: float = 0.15,
     working_distance_mm: float = 350.0,
+    surface_sigma_dn: float = 0.0,
 ) -> CrackMeasurement:
     """Width distribution for one crack, in millimetres on the wall."""
     gray = to_gray(image).astype(np.float32)
@@ -708,6 +709,10 @@ def measure_component(
     full_depth = float(np.percentile(depths, 90)) if depths.size else 0.0
     depth_floor = params.min_depth_fraction * full_depth
 
+    # Is this dark enough to be a crack at all? See SurveyParams.min_depth_dn.
+    required_depth = max(params.min_depth_dn, params.min_depth_sigma * surface_sigma_dn)
+    too_faint = bool(depths.size) and full_depth < required_depth
+
     # Resolvability is a property of the crack and the frame, not of one noisy
     # sample. Applying the floor per sample keeps only the samples that happened to
     # measure wide, so a crack sitting just under the floor came back measured, from
@@ -718,6 +723,26 @@ def measure_component(
     floor_px = max(params.min_resolved_px, params.min_width_sigma_ratio * sigma_px)
     median_width_px = float(np.median(finite)) if finite.size else 0.0
     crack_is_resolvable = finite.size > 0 and median_width_px >= floor_px
+
+    if too_faint and crack_is_resolvable:
+        return CrackMeasurement(
+            ok=False,
+            estimator=params.estimator,
+            sigma_px=sigma_px,
+            confidence="none",
+            refusal=Refusal(
+                "TOO_FAINT",
+                f"this is wide enough to measure but only {full_depth:.0f} grey levels "
+                f"darker than the surface around it, where a crack of this width would "
+                f"be at least {required_depth:.0f}. It is more likely a stain, a shadow "
+                f"or surface texture than a crack.",
+                details={
+                    "depth_dn": round(full_depth, 1),
+                    "required_dn": round(required_depth, 1),
+                    "surface_sigma_dn": round(surface_sigma_dn, 2),
+                },
+            ),
+        )
 
     for i, width_px in enumerate(widths_px):
         gx, gy, mx, my, ppm_normal, ex, ey, _d = geometry[i]

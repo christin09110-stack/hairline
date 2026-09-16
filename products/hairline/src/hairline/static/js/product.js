@@ -46,7 +46,7 @@ async function loadCalibration() {
   chip.style.color = report.ok ? 'var(--ok)' : 'var(--signal)';
   if (report.ok) return;
 
-  const banner = el('section', 'gate');
+  const banner = el('section', 'notpublishing');
   banner.id = 'calibration-gate';
   banner.append(el('h2', null, 'This build is not publishing widths'));
   banner.append(el('p', null,

@@ -1,27 +1,84 @@
 accuracy sweep
-  [  1/82] base               reference                       9.3s
-  [  2/82] base               reference                      20.8s
-  [  3/82] base               reference                      30.5s
-  [  4/82] base               reference                      39.3s
-  [  5/82] stand_off_mm       350                            47.9s
-  [  6/82] stand_off_mm       350                            59.1s
-  [  7/82] stand_off_mm       500                            66.8s
-  [  8/82] stand_off_mm       500                            74.8s
-  [  9/82] stand_off_mm       700                            82.9s
-  [ 10/82] stand_off_mm       700                            90.6s
-  [ 11/82] stand_off_mm       1000                           99.4s
-  [ 12/82] stand_off_mm       1000                          106.9s
-  [ 13/82] stand_off_mm       150                           114.9s
-  [ 14/82] stand_off_mm       150                           122.3s
-  [ 15/82] stand_off_mm       200                           130.4s
-  [ 16/82] stand_off_mm       200                           137.9s
-  [ 17/82] stand_off_mm       250                           146.6s
-  [ 18/82] stand_off_mm       250                           156.9s
-  [ 19/82] view_angle_deg     0                             167.0s
-  [ 20/82] view_angle_deg     0                             179.4s
-  [ 21/82] view_angle_deg     10                            190.4s
-  [ 22/82] view_angle_deg     10                            201.4s
-  [ 23/82] view_angle_deg     20                            212.9s
-  [ 24/82] view_angle_deg     20                            226.0s
-  [ 25/82] view_angle_deg     30                            238.8s
-  [ 26/82] view_angle_deg     30                            252.2s
+  [  1/82] base               reference                       7.0s
+  [  2/82] base               reference                      14.7s
+  [  3/82] base               reference                      21.3s
+  [  4/82] base               reference                      27.3s
+  [  5/82] stand_off_mm       350                            33.0s
+  [  6/82] stand_off_mm       350                            40.3s
+  [  7/82] stand_off_mm       500                            45.7s
+  [  8/82] stand_off_mm       500                            51.4s
+  [  9/82] stand_off_mm       700                            57.6s
+  [ 10/82] stand_off_mm       700                            63.6s
+  [ 11/82] stand_off_mm       1000                           71.1s
+  [ 12/82] stand_off_mm       1000                           77.2s
+  [ 13/82] stand_off_mm       150                            84.2s
+  [ 14/82] stand_off_mm       150                            90.1s
+  [ 15/82] stand_off_mm       200                            96.2s
+  [ 16/82] stand_off_mm       200                           101.7s
+  [ 17/82] stand_off_mm       250                           107.9s
+  [ 18/82] stand_off_mm       250                           116.0s
+  [ 19/82] view_angle_deg     0                             125.1s
+  [ 20/82] view_angle_deg     0                             137.1s
+  [ 21/82] view_angle_deg     10                            145.4s
+  [ 22/82] view_angle_deg     10                            155.1s
+  [ 23/82] view_angle_deg     20                            164.9s
+  [ 24/82] view_angle_deg     20                            176.0s
+  [ 25/82] view_angle_deg     30                            185.2s
+  [ 26/82] view_angle_deg     30                            195.6s
+  [ 27/82] view_angle_deg     40                            205.4s
+  [ 28/82] view_angle_deg     40                            213.8s
+  [ 29/82] view_angle_deg     50                            223.6s
+  [ 30/82] view_angle_deg     50                            231.3s
+  [ 31/82] defocus_sigma_px   0.5                           239.2s
+  [ 32/82] defocus_sigma_px   0.5                           247.0s
+  [ 33/82] defocus_sigma_px   0.9                           254.0s
+  [ 34/82] defocus_sigma_px   0.9                           261.4s
+  [ 35/82] defocus_sigma_px   1.5                           267.3s
+  [ 36/82] defocus_sigma_px   1.5                           273.2s
+  [ 37/82] defocus_sigma_px   2.5                           278.2s
+  [ 38/82] defocus_sigma_px   2.5                           283.9s
+  [ 39/82] defocus_sigma_px   4.0                           289.0s
+  [ 40/82] defocus_sigma_px   4.0                           294.1s
+  [ 41/82] lighting           exposure 0.55, gradient 0.10  299.9s
+  [ 42/82] lighting           exposure 0.55, gradient 0.10  306.4s
+  [ 43/82] lighting           exposure 0.75, gradient 0.18  312.3s
+  [ 44/82] lighting           exposure 0.75, gradient 0.18  319.5s
+  [ 45/82] lighting           exposure 1.00, gradient 0.18  325.4s
+  [ 46/82] lighting           exposure 1.00, gradient 0.18  332.8s
+  [ 47/82] lighting           exposure 1.25, gradient 0.30  341.1s
+  [ 48/82] lighting           exposure 1.25, gradient 0.30  348.0s
+  [ 49/82] lighting           exposure 1.50, gradient 0.45  355.8s
+  [ 50/82] lighting           exposure 1.50, gradient 0.45  363.3s
+  [ 51/82] sensor_noise_dn    1.0                           369.5s
+  [ 52/82] sensor_noise_dn    2.2                           375.6s
+  [ 53/82] sensor_noise_dn    4.0                           381.9s
+  [ 54/82] sensor_noise_dn    7.0                           388.2s
+  [ 55/82] combined           random 00                     393.7s
+  [ 56/82] combined           random 01                     399.5s
+  [ 57/82] combined           random 02                     405.6s
+  [ 58/82] combined           random 03                     410.8s
+  [ 59/82] combined           random 04                     415.4s
+  [ 60/82] combined           random 05                     419.8s
+  [ 61/82] combined           random 06                     425.1s
+  [ 62/82] combined           random 07                     431.5s
+  [ 63/82] combined           random 08                     436.8s
+  [ 64/82] combined           random 09                     442.3s
+  [ 65/82] combined           random 10                     447.9s
+  [ 66/82] combined           random 11                     453.2s
+  [ 67/82] combined           random 12                     458.1s
+  [ 68/82] combined           random 13                     464.5s
+  [ 69/82] combined           random 14                     468.9s
+  [ 70/82] combined           random 15                     474.1s
+  [ 71/82] combined           random 16                     478.4s
+  [ 72/82] combined           random 17                     484.2s
+  [ 73/82] combined           random 18                     490.2s
+  [ 74/82] combined           random 19                     494.8s
+  [ 75/82] combined           random 20                     500.3s
+  [ 76/82] combined           random 21                     504.3s
+  [ 77/82] combined           random 22                     509.0s
+  [ 78/82] combined           random 23                     514.4s
+  [ 79/82] combined           random 24                     518.7s
+  [ 80/82] combined           random 25                     522.6s
+  [ 81/82] combined           random 26                     527.1s
+  [ 82/82] combined           random 27                     532.9s
+  wrote eval/out/accuracy.json and .csv (1312 rows)

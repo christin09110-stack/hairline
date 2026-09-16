@@ -243,3 +243,11 @@ terminates by tag rather than by id so a forgotten identifier cannot leave one
 running. Arm E was measured on the already-running demo instance and started nothing.
 
 Total benchmark compute: **under eight cents.**
+
+### A footnote on the quota
+
+The account's on-demand quota increase to 96 vCPUs, requested at 03:18 UTC because a
+16-vCPU instance could not otherwise launch, **was approved at about 06:40** — after
+these numbers were taken. The benchmark ran on Spot, which is the same hardware and a
+separate quota, so nothing here would have changed. The increase matters only for
+anyone reproducing it on demand, who no longer has to.

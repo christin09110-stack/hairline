@@ -41,7 +41,7 @@ from .segment import segment_cracks
 from .targets import COMPACT, TargetSpec, calibration_target
 from .width import estimate_psf_sigma, measure_component
 
-__all__ = ["CalibrationReport", "LineResult", "check", "cached_report", "TOLERANCE_PCT"]
+__all__ = ["TOLERANCE_PCT", "CalibrationReport", "LineResult", "cached_report", "check"]
 
 TOLERANCE_PCT = 8.0
 """How far a measured line may sit from its printed width before the build fails.
@@ -307,6 +307,7 @@ def check(
             frame, best, plane, params,
             sigma_px=sigma_px, scale_rel_uncertainty=scale_rel,
             working_distance_mm=truth["camera"]["stand_off_mm"],
+            surface_sigma_dn=seg.residual_sigma,
         )
         measured = result.p50_mm if result.ok else None
         error = (
