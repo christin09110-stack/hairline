@@ -69,3 +69,8 @@ That is not ceremony. `research/` records what this measurement looks like when 
 goes wrong quietly: an earlier implementation filled an open crack contour and took
 the maximum of a distance transform, and reported **283 mm for a 0.75 mm crack**.
 Nothing crashed. The number looked like a number.
+
+## Licence
+
+Code in this repository is released under the MIT licence (see `LICENSE`). Third-party
+models, datasets and sample media keep their own licences, listed in the product README.
