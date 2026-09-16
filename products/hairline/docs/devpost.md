@@ -84,8 +84,23 @@ and noise varied; 266 readings attempted):
 The last row is the one we'd ask you to look at. An uncertainty that doesn't cover the
 error is decoration.
 
-**On two real test photos with a manual scale:** [PENDING: cracks found, widths with
-expanded uncertainty, refusals, from `media/real/hairline/scaled/runs/{dsc07068,dnipro}/run.json`.]
+**Real photos with a manual scale.** The black-hat settings were tuned on 16 real
+photos with no scale, detection only. It found 12 of 18 hand-traced cracks, up from 1,
+at a cost of 14.4 false components per image, mostly panel joints on two clad walls.
+The settings were then frozen, and two held-out photos were run once:
+
+| Test photo | Found | Measured, p95 ± U (k = 2) | Refused |
+|---|---:|---|---|
+| DSC07068, Avongard card, 80 mm span, ±2.21% scale | 6 | 0.485 ± 0.060, 0.711 ± 0.079, 0.519 ± 0.080 mm (medians 0.386, 0.493, 0.462) | 3, `BELOW_RESOLUTION`, under 0.357 mm |
+| Dnipro crack monitor, 40 mm span, ±3.50% scale | 0 | none | none |
+
+Neither photo has a true width, and the card's comparator lines don't sit on the crack,
+so this is not an accuracy claim. Read by eye against the card, the crack looks like a
+hairline of roughly 0.2 to 0.3 mm; that's a glance at a gauge, not a measurement. Our
+measured widths sit on the high side of it, and all three runs are within 1.5 px of the
+resolution floor. The Dnipro photo is a failure. Our best guess is the length filter (20
+widths at the 4 mm expected width is about 1,020 px), but we haven't confirmed it, and we
+report it as it ran instead of retuning.
 
 ## How we built it
 
@@ -224,11 +239,26 @@ Real photographs, used with a manual scale:
 
 - **"Crack DSC07068.JPG"** by IJD Dublin. Public domain.
   https://commons.wikimedia.org/wiki/File:Crack_DSC07068.JPG
-- **"Crack monitor in Dnipro.jpg"** by Alex Blokha. CC BY-SA 4.0. Shown with Hairline's
-  measurement overlay.
+- **"Crack monitor in Dnipro.jpg"** by Alex Blokha. CC BY-SA 4.0.
   https://commons.wikimedia.org/wiki/File:Crack_monitor_in_Dnipro.jpg
 
-[PENDING: credits for the real development photos, from `eval/real_dev/README.md`.]
+Real photographs used to tune detection (Wikimedia Commons unless noted):
+
+- "Detail of vertical crack in concrete retaining wall at Medway Park Sports Centre" and
+  "Cracked concrete retaining wall at Medway Park Sports Centre", by
+  Sunolafjagtenben-hur. CC0 1.0.
+- "Concrete cracked.jpg" by John Harvey. Public domain.
+- "Cracked concrete.jpg" by Boyana.kjfg. CC BY 4.0.
+- "ASR cracks concrete step barrier FHWA 2006.jpg", US Federal Highway Administration.
+  Public domain.
+- "Close view of crack in concrete on east side of highway bridge pier no. 2", US Bureau
+  of Reclamation via the US National Archives. Public domain.
+- "Cracked concrete and rebar.jpg" by Downtowngal. CC BY-SA 4.0.
+- "Hairline cracks.jpg" by Prygpt. CC BY-SA 4.0.
+- "Concrete wall cracking as steel reinforcing corrodes and swells 9058" and "... 9061"
+  by JonRichfield. CC BY-SA 3.0.
+- Six patches from "Concrete Crack Images for Classification" by Ç.F. Özgenel, Mendeley
+  Data, CC BY 4.0. https://data.mendeley.com/datasets/5y9wdsg2zt/2
 
 Everything else shown is rendered by code in the repository. The survey annotations use
 Barlow Condensed under the SIL Open Font License 1.1.

@@ -407,7 +407,7 @@ graduations pass every crack filter we have.
 
 The same commit adds **black-hat segmentation** (`segmentation="blackhat"`). The
 adaptive threshold was tuned on smooth synthetic concrete. On real pebbledash and
-painted render its local mean follows the texture, the crack breaks into hundreds of
+painted plaster its local mean follows the texture, the crack breaks into hundreds of
 fragments, and none of them survives the length filter. A morphological black-hat with
 an element a few crack widths across keeps only what is darker than its surroundings at
 that scale, and hysteresis then grows strong seeds along weaker continuations. The
@@ -416,12 +416,32 @@ default is still `adaptive`, so every synthetic number above still stands.
 ### 9.2 Development and test split
 
 Tuning used a separate development set of real photographs that carry **no scale at
-all**, so nothing tuned on them could have been fitted to a width.
-[PENDING: dev set size and what was tuned, from `eval/real_dev/README.md` and
-`eval/real_dev/results.json`.]
+all**, so nothing tuned on them could have been fitted to a width. It is detection only:
+10 Wikimedia Commons photos and 6 patches from the Özgenel concrete crack dataset on
+Mendeley, 16 images with 18 cracks or crack networks traced by eye
+([`../eval/real_dev/README.md`](../eval/real_dev), labels in `labels.json`). A kept
+component counts as a hit when at least 60% of its skeleton lies near a labelled line.
+Anything else counts as false.
+
+54 settings of the black-hat filters were swept (`results.json`). The best-scoring one
+found 17 of 18 cracks with 2,013 false components, so it was not chosen. Before and
+after the frozen setting:
+
+| | Cracks found | False components | False per image |
+|---|---:|---:|---:|
+| Before, filters as of `1d2e307` | 1 / 18 | 0 | 0.0 |
+| After, frozen | **12 / 18** | 231 | 14.4 |
+
+The false count is the honest cost. 191 of the 231 come from two 4000×3000 photos of
+clad walls, where the panel joints are long, dark and straight, and no contrast or shape
+filter tells them apart from a crack. On a surface like that the operator has to outline
+the joints as exclusion regions. The misses were all three cracks on an
+exposed-aggregate slab, a 1936 archive print, a short stub on one photo and one Mendeley
+patch.
 
 Two photos were held back as the test set. Both show a crack next to a reference of
-known size, and neither was used while tuning:
+known size. Neither was opened or run until the settings above were committed, and
+nothing was retuned after they were run:
 
 | Test photo | Reference in frame | Licence |
 |---|---|---|
@@ -466,19 +486,50 @@ The resolution gate stays at max(4 px, 4.25 × sigma), and at the default that i
 
 ### 9.4 Results on the two test photos
 
-[PENDING: filled in from the two `run.json` files once the final runs land.]
-
 | | DSC07068 (Avongard card) | Dnipro (crack monitor) |
 |---|---|---|
-| Reference length used | [PENDING] | [PENDING] |
-| Span between the two points | [PENDING] px | [PENDING] px |
-| Click error allowed | [PENDING] px | [PENDING] px |
-| Scale | [PENDING] px/mm | [PENDING] px/mm |
-| Scale uncertainty (click + tilt) | [PENDING] | [PENDING] |
-| Finest measurable width at the 4 px floor | [PENDING] mm | [PENDING] mm |
-| Cracks found | [PENDING] | [PENDING] |
-| Measured, width p95 ± expanded uncertainty | [PENDING] | [PENDING] |
-| Refused, by code | [PENDING] | [PENDING] |
+| Reference length used | 80 mm on the card | 40 mm on the monitor |
+| Span between the two points | 895.8 px | 510.0 px |
+| Click error allowed | 3 px | 5 px |
+| Scale | 11.197 px/mm | 12.75 px/mm |
+| Scale uncertainty, click + 10° tilt | ±2.21% (0.67% + 1.54%) | ±3.50% (1.96% + 1.54%) |
+| Finest measurable width at the 4 px floor | 0.357 mm | 0.314 mm |
+| Operator's expected width | 0.3 mm | 4.0 mm |
+| Components found on the crack | **6** | **0** |
+| Measured | 3 | 0 |
+| Refused | 3, all `BELOW_RESOLUTION`, narrower than 0.357 mm | none |
+
+The three measured runs on DSC07068, from `run.json`, with widths in mm and the expanded
+uncertainty (k = 2) on the 95th percentile:
+
+| Run | Median | p95 ± U | Length | Samples | Pixels across | Confidence |
+|---|---:|---:|---:|---:|---:|---|
+| C001 | 0.386 | 0.485 ± 0.060 | 34.2 | 75 | 4.33 | low |
+| C003 | 0.493 | 0.711 ± 0.079 | 10.2 | 30 | 5.52 | moderate |
+| C004 | 0.462 | 0.519 ± 0.080 | 7.3 | 15 | 4.97 | low |
+
+The annotated overlay, `000-station.jpg` next to each run record, shows the three
+measured runs and the three declined ones along the upper half of the crack. The card,
+the two studs and the painted number were outlined as exclusion regions. It is not
+committed here for the same reason as the photos.
+
+**How to read those numbers.** None of this is an accuracy result. Neither photo comes
+with a measured width, and the comparator lines printed on the Avongard card do not sit
+on the crack, so there is nothing to score against. What we can say is weaker. Reading
+the card by eye against the crack, the crack looks like a hairline of roughly 0.2 to
+0.3 mm. That is an eyeball reading of a gauge, not a measurement. The measured medians
+of 0.39 to 0.49 mm are on the high side of it. Every measured run sits within about
+1.5 px of the 4 px floor, where §8 already shows widths read high when blur is
+under-estimated, and here blur is not measured at all. Two of the three runs carry low
+confidence. The three refusals are the part we trust most: those stretches are finer
+than this photo can resolve, and the tool said so.
+
+**Dnipro is a failure.** Segmentation kept nothing: across the frame, 16 components
+were rejected on area and 2 as too short. The likely cause is the length filter: black-hat mode requires 20
+crack widths, and with the operator's expected width of 4.0 mm at 12.75 px/mm that is
+about 1,020 px, longer than the visible crack. We have not confirmed that. The settings
+were frozen before the test, so it is reported as it ran, not rerun with a smaller
+expected width.
 
 ### 9.5 Limitations of this mode
 
@@ -500,7 +551,7 @@ surface or sit at an angle to it. The coplanarity term covers a stated offset (2
 camera, and it has no way to tell that from a tilted wall. The tilt allowance is the
 operator's promise, not a measurement.
 
-**Two photos is not an evaluation.** They show that the mode runs end to end on real
-surfaces and that the output reads sensibly against the reference in frame. Accuracy on
+**Two photos is not an evaluation.** One ran end to end and produced widths and
+refusals. The other found nothing. Accuracy on
 real concrete still needs the check in §8: print the calibration target, photograph it,
 and compare against the widths printed on it.
