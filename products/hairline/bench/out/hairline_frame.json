@@ -1,0 +1,198 @@
+{
+  "workload": {
+    "name": "hairline_frame",
+    "description": "Hairline's per-frame segmentation on a 4K concrete frame: measured adaptive-threshold constant, adaptiveThreshold GAUSSIAN block 61, morphology, connectedComponentsWithStats, per-component distance transform and findContours",
+    "frames_per_run": 1,
+    "params": {
+      "resolution": "3840x2160",
+      "block": 61,
+      "cracks": 4
+    },
+    "cool_relevant": true
+  },
+  "repeats": 15,
+  "warmup": 3,
+  "started_at": "2026-09-16T05:05:19.417854+00:00",
+  "duration_s": 34.47,
+  "kleidicv_disclosure": "The stock opencv-python aarch64 wheel already bundles Arm KleidiCV 26.03 (verified by `strings` on cv2.abi3.so: 'Custom HAL: YES (carotene, KleidiCV (ver 26.03))'). The 'graviton-pip' arm is therefore an ACCELERATED baseline, not a plain one. Any speedup attributed to COOL is measured against that, and comparing COOL-on-Graviton to pip-on-x86 measures the architecture, not COOL.",
+  "arms": [
+    {
+      "arm": {
+        "name": "local-x86_64-pip",
+        "description": "this machine (x86_64), stock pip wheel",
+        "instance_type": "local",
+        "host": "local",
+        "cool": false,
+        "usd_per_hour": null,
+        "notes": "no cost attributed: not a billed instance"
+      },
+      "ok": true,
+      "skipped_reason": "",
+      "error": "",
+      "runs": 15,
+      "latency_ms": {
+        "median": 86.337,
+        "p95": 88.822,
+        "min": 84.962,
+        "stdev": 1.353
+      },
+      "throughput_fps": 11.58,
+      "cost_per_1k_frames_usd": null,
+      "env": {
+        "opencv_version": "5.0.0",
+        "numpy_version": "2.5.3",
+        "python_version": "3.13.7",
+        "machine": "x86_64",
+        "threads": 22,
+        "custom_hal": "YES (ipp (ver 0.0.1))",
+        "baseline": "SSE SSE2 SSE3",
+        "kleidicv": false,
+        "ipp": true
+      },
+      "samples_ms": [
+        87.6125,
+        88.8217,
+        87.351,
+        88.2008,
+        85.0542,
+        85.7191,
+        85.7468,
+        86.7284,
+        85.6982,
+        86.337,
+        84.9618,
+        85.6864,
+        89.38,
+        86.5012,
+        85.8691
+      ]
+    },
+    {
+      "arm": {
+        "name": "graviton-pip",
+        "description": "Graviton, stock pip wheel",
+        "instance_type": "c8g.4xlarge",
+        "host": "ubuntu@ec2-98-87-1-83.compute-1.amazonaws.com",
+        "cool": false,
+        "usd_per_hour": 0.6384,
+        "notes": "ALREADY CONTAINS KleidiCV 26.03. This is not an unaccelerated baseline and the report must not present it as one."
+      },
+      "ok": true,
+      "skipped_reason": "",
+      "error": "",
+      "runs": 15,
+      "latency_ms": {
+        "median": 75.306,
+        "p95": 75.414,
+        "min": 74.937,
+        "stdev": 0.161
+      },
+      "throughput_fps": 13.28,
+      "cost_per_1k_frames_usd": 0.013354,
+      "env": {
+        "opencv_version": "5.0.0",
+        "numpy_version": "2.5.3",
+        "python_version": "3.12.3",
+        "machine": "aarch64",
+        "threads": 16,
+        "custom_hal": "YES (carotene (ver 0.0.1) KleidiCV (ver 26.03))",
+        "baseline": "NEON FP16",
+        "kleidicv": true,
+        "ipp": false
+      },
+      "samples_ms": [
+        75.0141,
+        75.3687,
+        74.9366,
+        75.3774,
+        75.0797,
+        75.4135,
+        75.3056,
+        75.4492,
+        75.0547,
+        75.3822,
+        75.3493,
+        75.1757,
+        75.2463,
+        75.2512,
+        75.3422
+      ]
+    },
+    {
+      "arm": {
+        "name": "graviton-cool",
+        "description": "Graviton, COOL AMI",
+        "instance_type": "c8g.large",
+        "host": "local",
+        "cool": true,
+        "usd_per_hour": 0.08979999999999999,
+        "notes": "Cloud Optimized OpenCV for AWS Graviton4 v3.1, built on OpenCV 5.0"
+      },
+      "ok": false,
+      "skipped_reason": "BENCH_COOL_HOST is not set; no instance to run on",
+      "error": "",
+      "runs": 0,
+      "latency_ms": {
+        "median": null,
+        "p95": null,
+        "min": null,
+        "stdev": null
+      },
+      "throughput_fps": null,
+      "cost_per_1k_frames_usd": null,
+      "env": {},
+      "samples_ms": []
+    },
+    {
+      "arm": {
+        "name": "hybrid-x86",
+        "description": "x86 arm of a documented hybrid architecture",
+        "instance_type": "c7i.4xlarge",
+        "host": "ubuntu@ec2-34-232-62-123.compute-1.amazonaws.com",
+        "cool": false,
+        "usd_per_hour": 0.714,
+        "notes": "cost-matched x86 comparison, IPP HAL"
+      },
+      "ok": true,
+      "skipped_reason": "",
+      "error": "",
+      "runs": 15,
+      "latency_ms": {
+        "median": 99.292,
+        "p95": 100.031,
+        "min": 98.282,
+        "stdev": 0.528
+      },
+      "throughput_fps": 10.07,
+      "cost_per_1k_frames_usd": 0.019693,
+      "env": {
+        "opencv_version": "5.0.0",
+        "numpy_version": "2.5.3",
+        "python_version": "3.12.3",
+        "machine": "x86_64",
+        "threads": 16,
+        "custom_hal": "YES (ipp (ver 0.0.1))",
+        "baseline": "SSE SSE2 SSE3",
+        "kleidicv": false,
+        "ipp": true
+      },
+      "samples_ms": [
+        99.0348,
+        99.292,
+        99.4558,
+        99.708,
+        99.3111,
+        100.0309,
+        100.1902,
+        99.156,
+        99.0501,
+        99.2487,
+        99.3685,
+        99.8942,
+        98.8965,
+        98.2821,
+        98.4766
+      ]
+    }
+  ]
+}
