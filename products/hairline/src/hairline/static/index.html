@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hairline</title>
+<meta name="description" content="Crack widths in millimetres from a phone walk-past, with the uncertainty and a stated refusal where the photograph cannot support a number.">
+<link rel="stylesheet" href="/assets/css/product.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ------------------------------------------------------------- rail -- -->
+  <aside class="rail">
+    <div class="rail__mark">
+      <span class="rail__name">Hairline</span>
+      <span class="rail__version" id="product-version">v…</span>
+    </div>
+    <p class="rail__tagline" id="product-tagline">Crack widths in millimetres, with the uncertainty.</p>
+
+    <form id="upload-form">
+      <div class="rail__section">
+        <span class="rail__legend">Survey footage</span>
+        <button type="button" class="dropzone" id="dropzone">
+          <span class="dropzone__file" id="dropzone-file">Drop a clip, or click to choose</span>
+          <span class="dropzone__hint" id="dropzone-hint">…</span>
+        </button>
+        <input type="file" id="file-input" class="sr-only" aria-label="Choose a video or photograph">
+        <button class="button" type="submit" id="submit" disabled>Measure this surface</button>
+      </div>
+
+      <div class="rail__section">
+        <span class="rail__legend">Before you walk</span>
+        <button type="button" class="button button--quiet" id="capture-check"
+                style="width:100%">Check this view</button>
+        <div id="capture-advice" class="advice" hidden></div>
+        <p class="field__help">
+          Point the camera at the wall with the marker in shot and check the angle
+          before you film. It is the difference between a survey and a second trip.
+        </p>
+      </div>
+
+      <div class="rail__section">
+        <span class="rail__legend">Bundled samples</span>
+        <div class="samples" id="sample-picker"><span class="field__help">…</span></div>
+      </div>
+
+      <details class="rail__section rail__details" id="settings">
+        <summary class="rail__legend">Survey settings</summary>
+        <div id="params"></div>
+      </details>
+    </form>
+
+    <div class="rail__section">
+      <span class="rail__legend">Print before you go</span>
+      <div class="exports">
+        <a class="button button--quiet" id="sheet-marker" href="/api/target/marker.png">Scale marker</a>
+        <a class="button button--quiet" id="sheet-target" href="/api/target/calibration.png">Check target</a>
+      </div>
+    </div>
+
+    <div class="rail__status" id="status-block">
+      <div class="rail__row"><span>OpenCV</span><b id="stat-opencv">…</b></div>
+      <div class="rail__row"><span>HAL</span><b id="stat-hal">…</b></div>
+      <div class="rail__row"><span>Machine</span><b id="stat-machine">…</b></div>
+      <div class="rail__row"><span>Build</span><b id="stat-sha">…</b></div>
+      <div class="rail__row"><span>Frames measured</span><b id="stat-frames">0</b></div>
+      <div class="rail__row"><span>Instance</span><b id="stat-instance">…</b></div>
+      <div class="rail__row"><span>Calibration</span><b id="stat-calibration">…</b></div>
+    </div>
+  </aside>
+
+  <!-- ------------------------------------------------------------- page -- -->
+  <main class="page">
+    <div id="calibration-banner"></div>
+    <h1 class="page__title">Crack survey</h1>
+    <p class="page__standfirst">
+      Every width below was sampled perpendicular to the crack on the wall, not on the
+      screen, and converted to millimetres through the printed marker. Where the
+      photograph cannot support a number, this report says so and says why.
+    </p>
+
+    <section class="block" id="progress-panel" hidden>
+      <div class="block__head">
+        <h2 class="block__title">Working</h2>
+        <span class="block__note" id="job-status">queued</span>
+      </div>
+      <div class="progress">
+        <div class="progress__row">
+          <span class="progress__message" id="progress-message">uploading</span>
+          <span class="block__note" id="progress-percent">0%</span>
+        </div>
+        <div class="progress__track">
+          <div class="progress__bar" id="progress-bar" role="progressbar"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+      </div>
+      <pre class="log" id="log" aria-live="polite"></pre>
+    </section>
+
+    <div id="result">
+      <p class="empty">Nothing measured yet. Choose a clip, or run one of the bundled samples.</p>
+    </div>
+
+    <section class="block" id="evidence-block" hidden>
+      <div class="block__head">
+        <h2 class="block__title">Evidence</h2>
+        <span class="block__note" id="evidence-count"></span>
+      </div>
+      <div id="evidence"></div>
+    </section>
+
+    <p class="footnote" id="honesty">
+      Hairline ships no crack-width limit from any design code. The review bands are an
+      operator setting, and the default values are not taken from ACI 224R, EN 1992-1-1
+      or any other standard. Enter your own before using this to decide anything.
+    </p>
+  </main>
+</div>
+
+<script type="module" src="/assets/js/product.js"></script>
+</body>
+</html>

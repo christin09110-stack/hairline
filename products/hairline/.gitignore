@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+out/
+
+# The evaluation output is evidence, not build litter: docs/evaluation.md cites it
+# row by row and a judge should be able to recompute any figure from it. The rendered
+# refusal frames are not committed; they regenerate in seconds.
+!eval/out/
+eval/out/frames/
+bench/out/tmp/
+.pytest_cache/
+
+# The sample clips are deliberately committed: the deployed endpoint has to work
+# from a cold start with nothing uploaded, and a judge should be able to reproduce
+# the demo from the repo alone. The root .gitignore excludes *.mp4 for model and
+# footage artefacts; these four files are the exception, and they are 12 MB total.
+!src/hairline/samples/walk-past.mp4

@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.env
+.DS_Store
+
+# Evaluation output IS committed: docs/evaluation.md cites it row by row and a judge
+# should be able to recompute any figure in it. Only the rendered refusal frames are
+# left out, and they regenerate in seconds.
+products/hairline/eval/out/frames/
+
+# The bundled sample clips are committed on purpose. The deployed endpoint has to work
+# from a cold start with nothing uploaded, and the demo has to be reproducible from
+# this repository alone.

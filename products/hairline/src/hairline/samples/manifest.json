@@ -1,0 +1,75 @@
+{
+ "note": "Synthetic. Widths are exact by construction, drawn analytically in image space from a millimetre value by hairline.synth. No camera or concrete structure was available while this was built.",
+ "samples": [
+  {
+   "file": "walk-past.mp4",
+   "kind": "video",
+   "title": "Walk-past of a wall with four cracks",
+   "expect": "a crack schedule",
+   "truth_mm": {
+    "west run": 0.5,
+    "centre run": 0.8,
+    "east run": 1.6,
+    "hairline run": 0.25
+   },
+   "frames": 72,
+   "fps": 12.0,
+   "image_size": [
+    2560,
+    1440
+   ],
+   "cracks": {
+    "west run": {
+     "width_mm": 0.5,
+     "length_mm": 151.9
+    },
+    "centre run": {
+     "width_mm": 0.8,
+     "length_mm": 156.0
+    },
+    "east run": {
+     "width_mm": 1.6,
+     "length_mm": 134.5
+    },
+    "hairline run": {
+     "width_mm": 0.25,
+     "length_mm": 128.6
+    }
+   },
+   "marker_mm": 60.0,
+   "marker_dictionary": "DICT_4X4_50",
+   "blurred_frames": [
+    16,
+    17,
+    18,
+    41,
+    42
+   ],
+   "note": "synthetic; widths are exact by construction, see hairline.synth"
+  },
+  {
+   "file": "no-marker.jpg",
+   "kind": "image",
+   "title": "The same wall, photographed without the scale card",
+   "expect": "a refusal: NO_MARKER",
+   "truth_mm": {
+    "west run": 0.5,
+    "centre run": 0.8,
+    "east run": 1.6,
+    "hairline run": 0.25
+   }
+  },
+  {
+   "file": "too-oblique.jpg",
+   "kind": "image",
+   "title": "The card is in shot but the wall is nearly edge on",
+   "expect": "a refusal: TOO_OBLIQUE or MARKER_TOO_SMALL",
+   "truth_mm": {
+    "west run": 0.5,
+    "centre run": 0.8,
+    "east run": 1.6,
+    "hairline run": 0.25
+   }
+  }
+ ]
+}

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img">
+<rect width="760" height="400" fill="#FAF8F3"/>
+<text x="58" y="30" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="17" font-weight="600" fill="#12181D">Width error against stand-off</text>
+<line x1="58.0" y1="348.0" x2="738.0" y2="348.0" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="352.0" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">-25</text>
+<line x1="58.0" y1="289.3" x2="738.0" y2="289.3" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="293.3" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">-10</text>
+<line x1="58.0" y1="250.1" x2="738.0" y2="250.1" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="254.1" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">0</text>
+<line x1="58.0" y1="211.0" x2="738.0" y2="211.0" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="215.0" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">10</text>
+<line x1="58.0" y1="171.9" x2="738.0" y2="171.9" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="175.9" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">20</text>
+<line x1="58.0" y1="132.7" x2="738.0" y2="132.7" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="136.7" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">30</text>
+<line x1="58.0" y1="74.0" x2="738.0" y2="74.0" stroke="#D8D2C4" stroke-width="1"/>
+<text x="49.0" y="78.0" text-anchor="end" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">45</text>
+<line x1="58.0" y1="348.0" x2="58.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="58.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">150</text>
+<line x1="98.0" y1="348.0" x2="98.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="98.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">200</text>
+<line x1="138.0" y1="348.0" x2="138.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="138.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">250</text>
+<line x1="218.0" y1="348.0" x2="218.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="218.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">350</text>
+<line x1="338.0" y1="348.0" x2="338.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="338.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">500</text>
+<line x1="498.0" y1="348.0" x2="498.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="498.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">700</text>
+<line x1="738.0" y1="348.0" x2="738.0" y2="353.0" stroke="#5E6670" stroke-width="1"/>
+<text x="738.0" y="369.0" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">1000</text>
+<line x1="58.0" y1="250.1" x2="738.0" y2="250.1" stroke="#12181D" stroke-width="1.4" stroke-dasharray="5 4"/>
+<polygon points="58.0,244.6 98.0,251.5 138.0,247.8 218.0,250.7 338.0,243.3 498.0,252.5 738.0,252.6 738.0,252.6 498.0,254.1 338.0,253.3 218.0,252.5 138.0,252.2 98.0,251.5 58.0,252.2" fill="#15618F" fill-opacity="0.14"/>
+<polyline points="58.0,248.5 98.0,251.5 138.0,250.0 218.0,251.6 338.0,248.4 498.0,253.3 738.0,252.6" fill="none" stroke="#15618F" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="58.0" cy="248.5" r="3.4" fill="#15618F"/>
+<circle cx="98.0" cy="251.5" r="3.4" fill="#15618F"/>
+<circle cx="138.0" cy="250.0" r="3.4" fill="#15618F"/>
+<circle cx="218.0" cy="251.6" r="3.4" fill="#15618F"/>
+<circle cx="338.0" cy="248.4" r="3.4" fill="#15618F"/>
+<circle cx="498.0" cy="253.3" r="3.4" fill="#15618F"/>
+<circle cx="738.0" cy="252.6" r="3.4" fill="#15618F"/>
+<polygon points="58.0,243.4 98.0,224.0 138.0,248.0 218.0,247.9 338.0,242.3 498.0,250.7 738.0,251.4 738.0,251.4 498.0,251.9 338.0,253.2 218.0,252.4 138.0,252.2 98.0,246.3 58.0,252.2" fill="#8A5A06" fill-opacity="0.14"/>
+<polyline points="58.0,247.9 98.0,235.1 138.0,250.1 218.0,250.2 338.0,247.8 498.0,251.3 738.0,251.4" fill="none" stroke="#8A5A06" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="58.0" cy="247.9" r="3.4" fill="#8A5A06"/>
+<circle cx="98.0" cy="235.1" r="3.4" fill="#8A5A06"/>
+<circle cx="138.0" cy="250.1" r="3.4" fill="#8A5A06"/>
+<circle cx="218.0" cy="250.2" r="3.4" fill="#8A5A06"/>
+<circle cx="338.0" cy="247.8" r="3.4" fill="#8A5A06"/>
+<circle cx="498.0" cy="251.3" r="3.4" fill="#8A5A06"/>
+<circle cx="738.0" cy="251.4" r="3.4" fill="#8A5A06"/>
+<line x1="58.0" y1="348.0" x2="738.0" y2="348.0" stroke="#12181D" stroke-width="1.2"/>
+<text x="409" y="392" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670">Camera stand-off (mm)</text>
+<text x="16" y="200" text-anchor="middle" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#5E6670" transform="rotate(-90 16 200)">Width error (%)</text>
+<rect x="58" y="43" width="11" height="11" rx="2" fill="#15618F"/><text x="75" y="53" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#12181D">blur corrected</text>
+<rect x="180" y="43" width="11" height="11" rx="2" fill="#8A5A06"/><text x="197" y="53" font-family="Barlow, 'DejaVu Sans', system-ui, sans-serif" font-size="13" fill="#12181D">halfdepth</text>
+</svg>
