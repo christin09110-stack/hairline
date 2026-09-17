@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Terminate a Graviton instance launched by infra/graviton.sh.
+# Terminate a Graviton instance tagged Project=opencv26 (the demo box or a benchmark box).
 #
 #   infra/graviton-teardown.sh <instance-id> [--keep-sg] [--yes]
 #

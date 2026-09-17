@@ -3,13 +3,9 @@
 #
 #   products/hairline/infra/deploy.sh [--type c8g.large] [--name hairline-demo]
 #
-# Why this exists alongside infra/graviton.sh, which it deliberately does not
-# replace: the shared script opens 22 and 8000 and takes no IAM instance profile,
-# which is right for a benchmark box you ssh into. A public demo endpoint needs
-# 80 and 443 for automatic TLS, and it needs a role so the instance can pull its
-# own image from ECR at boot. Rather than add product-specific flags to a script
-# four other products share, Hairline launches its own. `infra/graviton.sh` is
-# still what launches the benchmark instances.
+# A public demo endpoint needs 80 and 443 for automatic TLS, and an instance role so
+# the box can pull its own image from ECR at boot. Benchmark instances are launched
+# separately by products/hairline/bench/instances.sh.
 #
 # Idempotent: re-running reuses the role, the security group and any instance
 # already carrying the Name tag, and never launches a second one.

@@ -34,8 +34,8 @@ infra/                  the deployment scripts
 constraints.txt         the pinned transitive dependency set
 ```
 
-Nothing has been rewritten to fit this repository. The paths in the report, the CI
-workflow and the deploy scripts are the paths that are here.
+Nothing has been rewritten to fit this repository. The paths in the report and the
+deploy scripts are the paths that are here.
 
 ## The one-minute version
 
@@ -57,12 +57,10 @@ raises on a 4.x wheel, because unpinned pip resolves to 4.14.x — which shipped
 
 ## The calibration gate
 
-[`ci/hairline.yml`](ci/hairline.yml) measures printed lines of known width on every
-push, and the image build job depends on it. It sits in `ci/` rather than
-`.github/workflows/` for one reason, recorded in [`ci/README.md`](ci/README.md): the
-token that published this repository has `repo` scope but not `workflow`, and GitHub
-refuses such a push. One `git mv` enables it. If a line whose width is written on the card comes
-back with the wrong width on it, the build fails and the service refuses to publish
+`tests/test_calibration_gate.py` renders the printable calibration card, measures lines
+of known width, and fails if the chain has drifted. The running service repeats the check
+at start-up and reports it at `/api/calibration`. If a line whose width is written on the card comes
+back with the wrong width on it, the test fails and the service refuses to publish
 any width at all.
 
 That is not ceremony. `research/` records what this measurement looks like when it

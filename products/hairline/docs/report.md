@@ -338,9 +338,8 @@ ones are refused rather than guessed. The gate fails if either half breaks, and 
 fails if fewer than three lines were measurable at all, so a card photographed from
 too far away cannot pass by declining everything.
 
-It runs in three places and all three are the same code: `pytest`, the CI workflow at
-`.github/workflows/hairline.yml` where the image build depends on it, and the service
-at startup, where a failure makes `analyze` refuse every upload with
+It runs in two places and both are the same code: `pytest`, and the service at
+startup, where a failure makes `analyze` refuse every upload with
 `CALIBRATION_FAILED` and the interface show it. `/api/calibration` publishes the
 result so a judge can check it without reading the tests.
 

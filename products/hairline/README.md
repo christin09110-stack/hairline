@@ -183,7 +183,7 @@ products/hairline/.venv/bin/python -m pytest \
 ```
 
 It photographs a card of printed lines whose widths are written on it and checks each
-one comes back with that width. If it fails, the build fails and the service refuses to
+one comes back with that width. If it fails, the test fails and the service refuses to
 publish any width at all.
 
 Re-run the evaluation sweep (about 12 minutes, it renders every scene):
