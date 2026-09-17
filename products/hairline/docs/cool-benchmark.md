@@ -1,7 +1,7 @@
 # The COOL benchmark
 
-**Submitted for the Best Use of COOL award. Read §1 first: one arm of this benchmark
-did not run, and the reason is a manual step nobody could take from a terminal.**
+**Submitted for the Best Use of COOL award. Read §1 first: the COOL AMI does not ship
+OpenCV 5, and that changes what its numbers mean.**
 
 Measured 16 September 2026, us-east-1, account <aws-account-id>. Raw JSON and the
 per-workload markdown are in [`../bench/out/`](../bench/out); the workload definitions
@@ -10,54 +10,56 @@ are in [`../bench/workload.py`](../bench/workload.py) and the instance launcher 
 
 ---
 
-## 1. What did not run, and why
+## 1. Arm A, and what the COOL AMI actually contains
 
-The Cloud Optimized OpenCV Library is an AWS Marketplace AMI. Using it requires
-accepting the Marketplace terms, and **there is no API for that**. The full command
-inventory of every marketplace service in the AWS CLI — `marketplace-agreement`,
-`marketplace-catalog`, `marketplace-deployment`, `marketplace-entitlement`,
-`marketplace-reporting` — contains no subscribe or accept-agreement operation.
-`marketplace-catalog start-change-set` is the seller-side publishing API, not a buyer
-action. Accepting terms is a browser-console click, and this build had programmatic
-credentials only.
+Arm A ran on 16 September 2026 at 23:58 UTC, about nineteen hours after arms B to E.
+The first attempt that morning stopped at the AWS Marketplace terms, which can only be
+accepted in the browser console (`run-instances` returned `OptInRequired`). The account
+owner accepted them that evening. Arm B was launched again
+alongside it, so the COOL-against-pip comparison in §4.3 comes from one session on two
+c8g.4xlarge instances. Arm B's whole-frame median in that session was 75.25 ms, against
+75.31 ms that morning.
 
-Verified rather than assumed. `run-instances --dry-run` creates nothing and answers
-the question exactly:
-
-```
-$ aws ec2 run-instances --dry-run --region us-east-1 \
-    --image-id ami-01db31139bc5615d8 --instance-type c8g.large \
-    --subnet-id subnet-0b6a703d8a9a3ded3
-
-An error occurred (OptInRequired) when calling the RunInstances operation:
-In order to use this AWS Marketplace product you need to accept terms and subscribe.
-To do so please visit https://aws.amazon.com/marketplace/pp?sku=aajkmdd4qo3r7yhqg61a7aah9
-```
-
-The same dry run against the plain Ubuntu arm64 AMI returns `DryRunOperation: Request
-would have succeeded`, so the block is the Marketplace opt-in and not IAM, networking,
-capacity or quota. Cross-checked from the buyer side:
+The image is `ami-01db31139bc5615d8`, "COOL-Graviton4-v2-AMI-prod-k6u24vxijyzvg",
+product code `aajkmdd4qo3r7yhqg61a7aah9`, created 2026-04-22, default user `ubuntu`,
+Ubuntu 24.04.3. This is what its OpenCV reports about itself:
 
 ```
-$ aws marketplace-agreement search-agreements --catalog AWSMarketplace \
-    --filters '[{"name":"PartyType","values":["Acceptor"]},
-                {"name":"AgreementType","values":["PurchaseAgreement"]}]'
-→ 12 active agreements, all proposed by 979382823631 (Bitnami).
-  None from 679593333241 (OpenCV).
+General configuration for OpenCV 4.14.0-pre
+  Version control:     4.13.0-153-g9a6e0d1bff-dirty
+  Timestamp:           2026-04-21T08:44:26Z
+  Baseline:            SVE NEON FP16 NEON_DOTPROD NEON_FP16 NEON_BF16
+  C++ flags (Release): -O3 -mcpu=neoverse-v2 ... -flto=auto
+  Parallel framework:  TBB (ver 2022.1 interface 12150)
+  Lapack:              YES (/opt/arm/armpl_25.07.1_gcc/lib/libarmpl_lp64.so ...)
+  Custom HAL:          YES (carotene (ver 0.0.1) KleidiCV (ver 0.7.0))
 ```
 
-So **arm A did not run**, and rather than guess at what it would have done, this
-report presents the three arms that did and states precisely what arm A would add.
-Everything needed to run it is committed: `bench/instances.sh up cool` launches the
-COOL AMI and the harness already knows to use `/opt/cool/venvs/python_3.12/bin/python`.
-One console click and one command completes the table.
+Three things follow.
 
-The AMI is identified as `ami-01db31139bc5615d8`, "COOL-Graviton4-v2-AMI-prod-k6u24vxijyzvg",
-product code `aajkmdd4qo3r7yhqg61a7aah9`, created 2026-04-22. **UNVERIFIED:** the listing
-id `prodview-fdvbfiewzuehs` could not be mapped to a product code from the CLI —
-`describe-entity` returns `ResourceNotFoundException` because the Catalog API only
-resolves entities the account owns as a seller — so that AMI is inferred from its name
-matching "For AWS Graviton4", and the same product code also covers a Graviton5 image.
+- **It is OpenCV 4.14.0-pre, not 5.0.** It is a development snapshot 153 commits after
+  4.13.0. Arms B to E run OpenCV 5.0.0 from the pinned wheel. So arm A against arm B
+  compares two builds and also two versions of OpenCV. We ran COOL's build as shipped
+  and did not swap in ours.
+- **It is tuned for the core.** The wheel's baseline is generic `NEON FP16`. COOL's
+  adds SVE, dotprod and BF16, and the whole library is compiled with
+  `-mcpu=neoverse-v2` and link-time optimisation, with TBB for threading and Arm
+  Performance Libraries for LAPACK.
+- **Its KleidiCV is labelled 0.7.0, where the wheel's is 26.03.** We did not work out
+  whether those are two version schemes for similar code or really different releases.
+
+A practical detail for anyone reproducing this: the venvs at
+`/opt/cool/venvs/python_3.1{0,1,2}` do not contain `cv2`. Calling
+`/opt/cool/venvs/python_3.12/bin/python` directly raises `ModuleNotFoundError`. The
+venv's `activate` script adds `/opt/cool/python_3.12/site-packages/cv2/python-3.12` to
+`PYTHONPATH` and `/opt/cool/cpp_sdk/lib` to `LD_LIBRARY_PATH`, and without those two
+variables there is no OpenCV. The root snapshot is also 50 GB, so a launch that asks
+for a smaller root volume fails with `InvalidBlockDeviceMapping`.
+
+**UNVERIFIED:** the listing id `prodview-fdvbfiewzuehs` could not be mapped to a product
+code from the CLI, because `describe-entity` only resolves entities the account sells.
+The AMI is matched to the Graviton4 listing by its name, and the same product code also
+covers a Graviton5 image.
 
 ---
 
@@ -86,7 +88,7 @@ architecture comparison, not a COOL baseline.
 
 ## 3. Method
 
-One workload, four arms, the same source shipped to each over ssh and executed there.
+One workload, five arms, the same source shipped to each over ssh and executed there.
 
 `hairline_frame` is the product's own per-frame segmentation, function for function:
 the measured adaptive-threshold constant, `adaptiveThreshold` with
@@ -109,7 +111,9 @@ seed inside `setup_src` so every arm gets a bit-identical image with no file tra
 15 timed runs per arm after 3 warm-up runs. Latency is reported as median and p95 over
 the timed runs. Cost per thousand frames is the arm's on-demand rate from the AWS
 Price List API divided into the measured latency; on-demand rather than the spot price
-actually paid, because on-demand is the number a reader can check.
+actually paid, because on-demand is the number a reader can check. Arm A's rate also
+includes COOL's $0.04 per hour software fee on c8g.4xlarge, from the listing, so it is
+charged at $0.6784 an hour against $0.6384 for arm B.
 
 Instances were **Spot**, and that is not a cost decision: the account's *Running
 On-Demand Standard instances* quota is 16 vCPUs with 14 already used by other
@@ -125,13 +129,14 @@ case. Spot and on-demand are the same hardware.
 
 | Arm | Instance | vCPU | median ms | p95 ms | frames/s | $/1000 frames | HAL |
 |---|---|---:|---:|---:|---:|---:|---|
-| **A · graviton-cool** | c8g.4xlarge | 16 | — | — | — | — | _did not run: Marketplace subscription is console-only_ |
+| **A · graviton-cool** | c8g.4xlarge | 16 | **68.02** | 68.47 | 14.70 | **$0.01282** | KleidiCV 0.7.0, OpenCV 4.14.0-pre |
 | **B · graviton-pip** | c8g.4xlarge | 16 | **75.31** | 75.41 | 13.28 | **$0.01335** | KleidiCV 26.03 |
 | **C · local x86** | this workstation | 22 | 86.34 | 88.82 | 11.58 | — | Intel IPP 2026.0.0 |
 | **D · hybrid-x86** | c7i.4xlarge | 16 | 99.29 | 100.03 | 10.07 | $0.01969 | Intel IPP 2026.0.0 |
 | **E · the deployed endpoint** | c8g.large | 2 | 134.25 | 136.01 | 7.45 | **$0.00297** | KleidiCV 26.03 |
 
-Arm E is not part of the comparison. It is the live demo instance, measured in place,
+Arm A was measured about nineteen hours after the others, in the same session as a second
+run of arm B (§4.3). Arm E is not part of the comparison. It is the live demo instance, measured in place,
 inside the container a judge's upload actually runs through — `docker exec hairline
 python -c …` over SSM. It is here because a benchmark of a configuration nobody runs
 is worth less than a number from the thing that is running.
@@ -152,11 +157,44 @@ sequential boundary trace, is not a per-pixel kernel, and shows **1.08×** — e
 the clock-speed difference. Averaging the two into one headline figure would hide the
 only thing a reader can act on, which is that the acceleration is real and is specific.
 
-### 4.3 Cost
+### 4.3 COOL against the stock wheel, same session
+
+Both on c8g.4xlarge, measured one after the other at 23:58 UTC on 16 September. Arm A in
+us-east-1a, arm B in us-east-1d.
+
+| Workload | A · COOL, median / p95 | B · pip, median / p95 | COOL speedup | $/1000, A | $/1000, B |
+|---|---:|---:|---:|---:|---:|
+| `adaptiveThreshold` GAUSSIAN, block 61, 4K | **14.18** / 14.32 ms | 24.57 / 24.62 ms | **1.73×** | **$0.00267** | $0.00436 |
+| `findContours` RETR_LIST over a 4K binary | 43.56 / 43.93 ms | 43.64 / 43.91 ms | 1.00× | $0.00821 | $0.00774 |
+| whole `hairline_frame` pipeline | **68.02** / 68.47 ms | 75.25 / 75.45 ms | **1.11×** | **$0.01282** | $0.01334 |
+| shared `crack_pipeline` microbenchmark | 47.34 / 47.81 ms | 50.04 / 50.21 ms | 1.06× | $0.00892 | $0.00887 |
+
+On this product's own frame, COOL is 1.11× faster than the stock wheel on the same
+instance. After its software fee it is 4% cheaper per frame.
+
+All of the gain is in one function. `adaptiveThreshold` runs 1.73× faster, taking
+10.4 ms off each frame. `findContours` is unchanged. The whole pipeline saves 7.2 ms a
+frame, which is less than the threshold call saves on its own. The pipeline makes the
+same threshold call, so the other calls in it (morphology, connected components,
+distance transforms, per-component contours) probably lost about 3 ms a frame between
+them on COOL. We did not time those calls one by one, so we cannot say which.
+
+Where a workload gets no speedup, the fee makes COOL more expensive: `findContours`
+costs 6% more per thousand calls on COOL, and the shared microbenchmark is level.
+
+We cannot say which part of the build produces the 1.73×. The candidates are the
+Neoverse-V2 compile flags, the SVE baseline, the different KleidiCV, and the
+differences between OpenCV 4.14.0-pre and 5.0.0. Separating them would take our own
+builds, which we did not make. The harness times each call. It does not compare the
+two arms' output images, so this benchmark does not show that the two builds produce
+identical masks.
+
+### 4.4 Cost
 
 Per thousand 4K frames, at us-east-1 on-demand rates:
 
-- c8g.4xlarge, Graviton4: **$0.01335**
+- c8g.4xlarge, Graviton4, COOL AMI including its $0.04/hr fee: **$0.01282**
+- c8g.4xlarge, Graviton4, stock wheel: **$0.01335**
 - c7i.4xlarge, x86: **$0.01969** — 47% more for the same work
 - c8g.large, Graviton4, 2 vCPU: **$0.00297**
 
@@ -168,26 +206,30 @@ latency you have promised somebody.
 
 ---
 
-## 5. What arm A would add, and what we can and cannot say without it
+## 5. What arm A shows, and what it does not
 
-**What can be said now.** The Arm/KleidiCV path is faster and materially cheaper than
-cost-matched x86 on this workload, and the advantage is concentrated in exactly the
-per-pixel kernels KleidiCV names. That result stands on its own and is reproducible
-from this repository in about fifteen minutes.
+**What it shows.** On Hairline's own 4K frame, the COOL AMI's OpenCV is 1.11× faster
+than the stock OpenCV 5.0.0 wheel on the same c8g.4xlarge, and 4% cheaper per frame
+after the software fee. The gain comes from `adaptiveThreshold`, 1.73× faster, which is
+one of the two functions COOL's listing names for this kind of work. The other,
+`findContours`, runs at the same speed on both builds. Measured against cost-matched
+x86 from the morning session, COOL runs the whole frame 1.46× faster (68.02 ms against
+99.29 ms), and at 35% lower cost per frame.
 
-**What cannot be said.** Nothing about COOL's speedup over a stock Arm wheel, because
-the measurement was not taken. COOL's listing claims a benchmark "across 78 widely
-used imgproc, core, and I/O functions against the default OpenCV 5.0.0 build" and
-publishes an average speedup as an image on the listing page, which we could not read
-and therefore do not quote. We will not repeat a vendor figure we have not verified,
-and we will not model, extrapolate or estimate what arm A would have shown.
+**What it does not show.** It does not isolate the build flags. COOL ships OpenCV
+4.14.0-pre, a development snapshot, and the baseline is OpenCV 5.0.0. Part of any
+difference could come from source changes between those versions rather than from the
+tuning. We have not read the COOL listing's own average speedup, which is published as
+an image, so we do not quote it or compare against it. COOL's samples README reports
+its own figures against "Standard (Pip 4.13)", an older wheel than the 5.0.0 one
+used here.
 
-**What we expect, stated as an expectation and not a result.** The stock wheel's
-`Baseline: NEON FP16` is generic ARMv8, while Graviton4 is Neoverse-V2 with SVE2. A
-build targeting that specific core, which is what COOL is, has real headroom on the
-same functions KleidiCV already helps — and the 1.65× on `adaptiveThreshold` is
-evidence that this workload responds to kernel-level work. Whether COOL realises that
-headroom is a measurement, and it is the one measurement missing here.
+**What it means for this product.** Thresholding is about a third of Hairline's frame
+time on the stock wheel (24.6 of 75.3 ms), so even a large gain there moves the whole
+frame by a modest amount. A 1.11× gain on one instance size is real and small. It does
+not change the deployment choice in §4.4: the 2-vCPU c8g.large on the stock wheel is
+still 4.3× cheaper per frame than COOL on the 16-vCPU instance, and COOL on the small
+instance was not measured.
 
 **The second axis, which is not latency.** The COOL rubric credits "measured
 performance, cost, reliability, **or developer-productivity value**". On developer
@@ -199,15 +241,16 @@ first attempt that produced neither Docker nor Caddy because a single `apt-get i
 with five package names aborts the whole transaction when one of them is unavailable
 on arm64. COOL ships an image with three preconfigured venvs at
 `/opt/cool/venvs/python_3.1{0,1,2}` and a C++ SDK at `/opt/cool/cpp_sdk`. For a team
-standing up Arm CI, that is the product, and it is worth saying so plainly even though
-we could not put a number on the latency.
+standing up Arm CI, that is the product. One caveat from actually using it: the venvs
+only work through their `activate` script (§1), so a CI job that calls the venv's
+python by path gets no OpenCV.
 
 ---
 
 ## 6. Reproducing this
 
 ```bash
-# 1. the two arms that ran
+# 1. arms B and D
 products/hairline/bench/instances.sh up graviton c8g.4xlarge
 products/hairline/bench/instances.sh up hybrid   c7i.4xlarge
 # wait for /var/log/bench-ready on each
@@ -221,11 +264,19 @@ export BENCH_HYBRID_PYTHON=/opt/bench/bin/python
 python -c "import products.hairline.bench.workload" \
   && python -m bench.run hairline_frame --repeats 15 --out products/hairline/bench/out
 
-# 2. the arm that did not
-#    accept the terms at https://aws.amazon.com/marketplace/pp/prodview-fdvbfiewzuehs
-products/hairline/bench/instances.sh up cool c8g.4xlarge
+# 2. arm A (accept the Marketplace terms once, in the console, first:
+#    https://aws.amazon.com/marketplace/pp/prodview-fdvbfiewzuehs)
+products/hairline/bench/instances.sh up cool     c8g.4xlarge   # 50 GB root, no cloud-init
+products/hairline/bench/instances.sh up graviton c8g.4xlarge   # arm B again, same session
 export BENCH_COOL_HOST=ubuntu@<dns> BENCH_COOL_TYPE=c8g.4xlarge
-python -m bench.run hairline_frame --repeats 15 --out products/hairline/bench/out
+for w in hairline_frame hairline_threshold hairline_contours crack_pipeline; do
+  python -m bench.run $w --repeats 15 --warmup 3 --arms graviton-pip,graviton-cool \
+    --out products/hairline/bench/out/arm-a
+done
+# The recorded run used a two-line wrapper on the instance that sources
+# /opt/cool/venvs/python_3.12/bin/activate and execs python3 (BENCH_COOL_PYTHON pointed
+# at it). The harness now sets the same PYTHONPATH and LD_LIBRARY_PATH for the COOL arm
+# itself, so the wrapper is no longer needed.
 
 # 3. always
 products/hairline/bench/instances.sh down
@@ -237,12 +288,18 @@ products/hairline/bench/instances.sh down
 |---|---|---|---|---|---|---|---|
 | `i-0a6e675cd2c58a483` | c8g.4xlarge | arm B, Graviton stock wheel | 05:00:28 | 05:09:22 | 9 min | $0.2512 | **$0.038** |
 | `i-036a60724d96032eb` | c7i.4xlarge | arm D, cost-matched x86 | 05:02:38 | 05:09:22 | 7 min | $0.3088 | **$0.036** |
+| `i-011d9ab8952e1efb1` | c8g.4xlarge | arm A, COOL AMI | 23:56:01 | 23:59:53 | 4 min | $0.2703 + $0.04 fee | **$0.020** |
+| `i-017d88171112503e2` | c8g.4xlarge | arm B again, same session as A | 23:56:38 | 23:59:53 | 3 min | $0.2473 | **$0.013** |
 
-Both confirmed terminated. `bench/instances.sh list` returns nothing, and `down`
+All four confirmed terminated. `bench/instances.sh list` returns nothing, and `down`
 terminates by tag rather than by id so a forgotten identifier cannot leave one
 running. Arm E was measured on the already-running demo instance and started nothing.
 
-Total benchmark compute: **under eight cents.**
+Spot prices are the us-east-1 price history for each instance's zone at launch. The
+arm A cost assumes the Marketplace fee is billed per second like the instance. If it is
+billed by the whole hour, arm A cost $0.31. We have not checked the bill.
+
+Total benchmark compute: **about 11 cents**, or 40 cents if the COOL fee bills a full hour.
 
 ### A footnote on the quota
 

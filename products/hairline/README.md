@@ -6,8 +6,11 @@ Where the photograph cannot support a number, Hairline says so and says why.**
 
 An entry in the OpenCV AI Competition 2026. It is also this workshop's bid for the
 **Best Use of COOL** award, because its per-frame work — adaptive Gaussian
-thresholding and contour extraction on a 4K frame — is exactly what the Cloud
-Optimized OpenCV Library is built to accelerate. See [`docs/cool-benchmark.md`](docs/cool-benchmark.md).
+thresholding and contour extraction on a 4K frame — is what the Cloud Optimized OpenCV
+Library is built to accelerate. On a c8g.4xlarge the COOL AMI runs that frame 1.11×
+faster than the stock OpenCV 5.0.0 wheel (68.02 against 75.25 ms), almost all of it
+from a 1.73× faster `adaptiveThreshold`. The AMI ships OpenCV 4.14.0-pre, so that is a
+comparison of two builds and two versions. See [`docs/cool-benchmark.md`](docs/cool-benchmark.md).
 
 - **Live endpoint: <https://54-224-119-247.sslip.io>** — AWS Graviton4, `c8g.large`,
   us-east-1. Three samples are bundled, so it works from a cold start with nothing

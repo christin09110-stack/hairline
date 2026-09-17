@@ -1,0 +1,121 @@
+{
+  "workload": {
+    "name": "hairline_contours",
+    "description": "findContours RETR_LIST over the whole thresholded 4K frame",
+    "frames_per_run": 1,
+    "params": {
+      "resolution": "3840x2160",
+      "mode": "RETR_LIST"
+    },
+    "cool_relevant": true
+  },
+  "repeats": 15,
+  "warmup": 3,
+  "started_at": "2026-09-16T23:59:14.691265+00:00",
+  "duration_s": 9.59,
+  "kleidicv_disclosure": "The stock opencv-python aarch64 wheel already bundles Arm KleidiCV 26.03 (verified by `strings` on cv2.abi3.so: 'Custom HAL: YES (carotene, KleidiCV (ver 26.03))'). The 'graviton-pip' arm is therefore an ACCELERATED baseline, not a plain one. Any speedup attributed to COOL is measured against that, and comparing COOL-on-Graviton to pip-on-x86 measures the architecture, not COOL.",
+  "arms": [
+    {
+      "arm": {
+        "name": "graviton-pip",
+        "description": "Graviton, stock pip wheel",
+        "instance_type": "c8g.4xlarge",
+        "host": "ubuntu@ec2-18-234-93-168.compute-1.amazonaws.com",
+        "cool": false,
+        "usd_per_hour": 0.6384,
+        "notes": "ALREADY CONTAINS KleidiCV 26.03. This is not an unaccelerated baseline and the report must not present it as one."
+      },
+      "ok": true,
+      "skipped_reason": "",
+      "error": "",
+      "runs": 15,
+      "latency_ms": {
+        "median": 43.644,
+        "p95": 43.913,
+        "min": 43.227,
+        "stdev": 0.176
+      },
+      "throughput_fps": 22.91,
+      "cost_per_1k_frames_usd": 0.00774,
+      "env": {
+        "opencv_version": "5.0.0",
+        "numpy_version": "2.5.3",
+        "python_version": "3.12.3",
+        "machine": "aarch64",
+        "threads": 16,
+        "custom_hal": "YES (carotene (ver 0.0.1) KleidiCV (ver 26.03))",
+        "baseline": "NEON FP16",
+        "kleidicv": true,
+        "ipp": false
+      },
+      "samples_ms": [
+        43.9639,
+        43.7918,
+        43.9134,
+        43.8053,
+        43.7951,
+        43.6044,
+        43.6312,
+        43.5543,
+        43.567,
+        43.6077,
+        43.6491,
+        43.5807,
+        43.2271,
+        43.7005,
+        43.6442
+      ]
+    },
+    {
+      "arm": {
+        "name": "graviton-cool",
+        "description": "Graviton, COOL AMI",
+        "instance_type": "c8g.4xlarge",
+        "host": "ubuntu@ec2-18-207-101-204.compute-1.amazonaws.com",
+        "cool": true,
+        "usd_per_hour": 0.6784,
+        "notes": "Cloud Optimized OpenCV for AWS Graviton4 v3.1, built on OpenCV 5.0"
+      },
+      "ok": true,
+      "skipped_reason": "",
+      "error": "",
+      "runs": 15,
+      "latency_ms": {
+        "median": 43.559,
+        "p95": 43.928,
+        "min": 43.296,
+        "stdev": 0.202
+      },
+      "throughput_fps": 22.96,
+      "cost_per_1k_frames_usd": 0.008208,
+      "env": {
+        "opencv_version": "4.14.0-pre",
+        "numpy_version": "2.4.4",
+        "python_version": "3.12.3",
+        "machine": "aarch64",
+        "threads": 16,
+        "custom_hal": "YES (carotene (ver 0.0.1) KleidiCV (ver 0.7.0))",
+        "baseline": "SVE NEON FP16 NEON_DOTPROD NEON_FP16 NEON_BF16",
+        "kleidicv": true,
+        "ipp": false
+      },
+      "samples_ms": [
+        43.4249,
+        43.9987,
+        43.9278,
+        43.3976,
+        43.5003,
+        43.518,
+        43.6526,
+        43.2963,
+        43.6972,
+        43.3126,
+        43.5592,
+        43.5742,
+        43.6643,
+        43.7444,
+        43.5455
+      ]
+    }
+  ]
+}

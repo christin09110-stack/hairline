@@ -212,7 +212,17 @@ def ARMS() -> list[Arm]:  # a factory, not a constant: it reads the environment 
             ),
             ssh_key=os.environ.get("BENCH_SSH_KEY", ""),
             cool=True,
-            notes="Cloud Optimized OpenCV for AWS Graviton4 v3.1, built on OpenCV 5.0",
+            # COOL's venvs do not contain cv2. Its `activate` script adds the build to
+            # PYTHONPATH and the C++ SDK to LD_LIBRARY_PATH; without both, the venv's
+            # python raises ModuleNotFoundError.
+            env={
+                "PYTHONPATH": "/opt/cool/python_3.12/site-packages/cv2/python-3.12",
+                "LD_LIBRARY_PATH": "/opt/cool/cpp_sdk/lib",
+            },
+            notes=(
+                "COOL-Graviton4-v2 AMI. Measured 2026-09-16: OpenCV 4.14.0-pre, "
+                "KleidiCV 0.7.0 HAL, -mcpu=neoverse-v2, TBB, Arm Performance Libraries"
+            ),
         )
     )
 

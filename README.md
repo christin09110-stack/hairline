@@ -14,7 +14,7 @@ of COOL** award.
 | **What it is, how to run it, how to test it** | [`products/hairline/README.md`](products/hairline/README.md) |
 | **Technical report** | [`products/hairline/docs/report.md`](products/hairline/docs/report.md) |
 | **Evaluation, with the numbers and the plots** | [`products/hairline/docs/evaluation.md`](products/hairline/docs/evaluation.md) |
-| **COOL benchmark, including the arm that did not run** | [`products/hairline/docs/cool-benchmark.md`](products/hairline/docs/cool-benchmark.md) |
+| **COOL benchmark, including the COOL AMI (which ships OpenCV 4.14.0-pre)** | [`products/hairline/docs/cool-benchmark.md`](products/hairline/docs/cool-benchmark.md) |
 | **Architecture diagrams** | [`products/hairline/docs/architecture.md`](products/hairline/docs/architecture.md) |
 | **AWS resources and what they cost** | [`products/hairline/docs/costs.md`](products/hairline/docs/costs.md) |
 
@@ -29,7 +29,7 @@ packages/visioncore     OpenCV 5 primitives: the version assertion, marker calib
                         with its refusal path, video iteration, run records, timings
 packages/servicekit     the FastAPI app factory, job store and progress stream
 products/hairline       this product
-bench/                  the four-arm COOL benchmark harness
+bench/                  the COOL benchmark harness (x86, Graviton wheel, COOL AMI arms)
 infra/                  the deployment scripts
 constraints.txt         the pinned transitive dependency set
 ```

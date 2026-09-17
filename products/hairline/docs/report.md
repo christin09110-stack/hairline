@@ -370,6 +370,14 @@ measures the processor rather than the library. Every speedup here is computed a
 a stock wheel on the same Graviton instance, and the benchmark report prints that
 disclosure in its own results table.
 
+The COOL AMI arm ran on 16 September. The image ships OpenCV 4.14.0-pre, not 5.0,
+compiled for Neoverse-V2 with an SVE baseline, TBB and KleidiCV 0.7.0. On a
+c8g.4xlarge, against the stock 5.0.0 wheel launched in the same session, it runs the
+whole 4K frame in 68.02 ms against 75.25 ms (1.11×) and costs 4% less per frame after
+its $0.04/hr software fee. The gain is in `adaptiveThreshold`, 1.73× faster.
+`findContours` runs at the same speed. Because the OpenCV versions differ, the result
+does not isolate COOL's build flags.
+
 ## 8. Limitations
 
 **The evaluation is synthetic.** We had no camera and no concrete structure. Synthetic
@@ -427,8 +435,9 @@ of a structure would be a batch job, not a web request.
 1. **Print the calibration target and photograph it.** Everything here is bounded by
    rendered targets. That check costs ten minutes and a printer and would either
    confirm the numbers or be the most interesting result in the project.
-2. **Run the COOL arm.** One console click and one command; the harness and the
-   launcher are committed and the other three arms are measured.
+2. **Separate COOL's tuning from its OpenCV version.** Build 5.0.0 with the same
+   Neoverse-V2 flags and run it next to the COOL AMI, and measure COOL on the 2-vCPU
+   c8g.large the demo runs on.
 3. **Measure a real crack next to a crack comparator card**, which is the only way to
    compare against current practice, and the ASCE page gives no figure for how
    accurate that practice is.

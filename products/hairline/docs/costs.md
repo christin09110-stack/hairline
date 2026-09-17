@@ -118,6 +118,10 @@ $58 a month buys a demo that behaves like the thing being described.
 
 ## What is blocked, and what it would cost to unblock
 
+**Update, 16 September 2026, evening: the terms were accepted in the console and the
+COOL arm has run.** Results are in [`cool-benchmark.md`](cool-benchmark.md) §4.3. What
+follows is the record of why it was blocked that morning.
+
 **The COOL AMI needs a Marketplace subscription that can only be accepted in the
 browser console.** There is no CLI path: the full command inventory of
 `marketplace-agreement`, `marketplace-catalog`, `marketplace-deployment`,
@@ -125,7 +129,7 @@ browser console.** There is no CLI path: the full command inventory of
 accept-agreement operation. `marketplace-catalog start-change-set` is the seller-side
 publishing API, not a buyer action.
 
-Verified not-subscribed three ways:
+Before it was accepted, verified not-subscribed three ways:
 
 ```
 $ aws ec2 run-instances --dry-run --image-id ami-01db31139bc5615d8 \
@@ -168,8 +172,8 @@ unused 32-vCPU quota and is the same hardware; the benchmark would not have been
 blocked either way, and the increase now removes the constraint for anyone
 reproducing it on demand.
 
-Both are recorded here rather than worked around, because the alternative was to
-report a benchmark arm that did not run.
+Both are recorded here rather than worked around. The subscription was accepted by
+hand that evening and the COOL arm then ran on Spot.
 
 ## AMI identifiers, for reproduction
 

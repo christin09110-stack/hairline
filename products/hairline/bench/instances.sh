@@ -76,6 +76,12 @@ CLOUDINIT
 
 launch() {  # $1 name  $2 type  $3 ami  $4 arch
   local name="$1" type="$2" ami="$3" sg
+  # The COOL AMI's root snapshot is 50 GB and it ships its own venvs, so it gets a
+  # 50 GB root and no cloud-init: installing our wheel there would put a second
+  # OpenCV next to the one being measured.
+  local disk=24 udata
+  udata="$(user_data)"
+  if [[ "$name" == "cool" ]]; then disk=50; udata="$(printf '#!/bin/bash\ntouch /var/log/bench-ready\n' | base64 -w0)"; fi
   sg="$(security_group)"
   say "requesting spot $type for $name"
   local id
@@ -83,8 +89,8 @@ launch() {  # $1 name  $2 type  $3 ami  $4 arch
     --image-id "$ami" --instance-type "$type" \
     --security-group-ids "$sg" --key-name "$KEY" \
     --instance-market-options 'MarketType=spot,SpotOptions={SpotInstanceType=one-time,InstanceInterruptionBehavior=terminate}' \
-    --user-data "$(user_data)" \
-    --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":24,"VolumeType":"gp3","DeleteOnTermination":true}}]' \
+    --user-data "$udata" \
+    --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":'"$disk"',"VolumeType":"gp3","DeleteOnTermination":true}}]' \
     --metadata-options "HttpTokens=required,HttpEndpoint=enabled" \
     --tag-specifications \
       "ResourceType=instance,Tags=[{Key=Name,Value=hairline-bench-$name},{Key=Project,Value=opencv26},{Key=Product,Value=hairline},{Key=Role,Value=benchmark}]" \
@@ -98,9 +104,15 @@ launch() {  # $1 name  $2 type  $3 ami  $4 arch
   launched="$(aws ec2 describe-instances --region "$REGION" --instance-ids "$id" \
         --query 'Reservations[0].Instances[0].LaunchTime' --output text)"
   ok "$id  $dns  launched $launched"
-  printf 'export BENCH_%s_HOST=ubuntu@%s\nexport BENCH_%s_TYPE=%s\nexport BENCH_%s_PYTHON=/opt/bench/bin/python\n' \
-    "${name^^}" "$dns" "${name^^}" "$type" "${name^^}"
-  warn "cloud-init installs the wheel; wait for /var/log/bench-ready before benchmarking"
+  local py=/opt/bench/bin/python
+  [[ "$name" == "cool" ]] && py=/opt/cool/venvs/python_3.12/bin/python
+  printf 'export BENCH_%s_HOST=ubuntu@%s\nexport BENCH_%s_TYPE=%s\nexport BENCH_%s_PYTHON=%s\n' \
+    "${name^^}" "$dns" "${name^^}" "$type" "${name^^}" "$py"
+  if [[ "$name" == "cool" ]]; then
+    warn "COOL's cv2 needs the PYTHONPATH/LD_LIBRARY_PATH its activate script sets; bench/arms.py sets both"
+  else
+    warn "cloud-init installs the wheel; wait for /var/log/bench-ready before benchmarking"
+  fi
 }
 
 case "${1:-}" in
