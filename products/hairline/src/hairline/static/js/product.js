@@ -515,7 +515,11 @@ function renderReport(record) {
   const refusals = record.refusals ?? [];
   const nodes = [];
 
-  $('stat-frames').textContent = `${metrics.stations ?? 0} of ${metrics.frames_read ?? 0}`;
+  const framesRead = metrics.frames_read ?? 0;
+  if (framesRead) {
+    $('stat-frames').textContent = `${metrics.stations ?? 0} of ${framesRead}`;
+    $('stat-frames-row').hidden = false;
+  }
 
   const measured = results.filter((r) => r.measurable);
   if (metrics.scale_source === 'manual') nodes.push(manualScaleNotice(record));

@@ -1,67 +1,12 @@
 # Hairline
 
-**A phone walk-past of a concrete surface becomes a measured crack survey: every
-crack located, its width in millimetres, and an uncertainty that means something.
-Where the photograph cannot support a number, Hairline says so and says why.**
+**A phone walk-past of a concrete surface becomes a measured crack survey: every crack
+located, its width in millimetres, and an uncertainty that means something. Where the
+photograph cannot support a number, Hairline says so and says why.**
 
-An entry in the OpenCV AI Competition 2026. It is also this workshop's bid for the
-**Best Use of COOL** award, because its per-frame work — adaptive Gaussian
-thresholding and contour extraction on a 4K frame — is what the Cloud Optimized OpenCV
-Library is built to accelerate. On a c8g.4xlarge the COOL AMI runs that frame 1.11×
-faster than the stock OpenCV 5.0.0 wheel (68.02 against 75.25 ms), almost all of it
-from a 1.73× faster `adaptiveThreshold`. The AMI ships OpenCV 4.14.0-pre, so that is a
-comparison of two builds and two versions. See [`docs/cool-benchmark.md`](docs/cool-benchmark.md).
+OpenCV AI Competition 2026 entry. OpenCV 5.0.0 on AWS Graviton4.
 
-- **Live endpoint: <https://54-224-119-247.sslip.io>** — AWS Graviton4, `c8g.large`,
-  us-east-1. Three samples are bundled, so it works from a cold start with nothing
-  uploaded. `/version` prints the OpenCV build and the HAL it is running on.
-- **Technical report:** [`docs/report.md`](docs/report.md)
-- **Evaluation, with the numbers:** [`docs/evaluation.md`](docs/evaluation.md)
-- **Architecture diagrams:** [`docs/architecture.md`](docs/architecture.md)
-
----
-
-## What it does
-
-Tape a printed marker of known size flat on the wall, next to the crack, and walk
-past with a phone. Hairline:
-
-1. reads the clip, scores every frame for focus, and finds the marker;
-2. recovers the plane the marker lies in, and with it the scale in pixels per
-   millimetre, which varies across the frame whenever the camera is not square on;
-3. thresholds each usable frame adaptively, keeps the components that are long, thin
-   and genuinely darker than the surface around them, and cuts crack networks at
-   their junctions so each run is measured separately;
-4. samples the intensity **perpendicular to each crack on the wall** — not
-   perpendicular to it on screen, which under a tilt is a different direction — and
-   reads a width from each profile;
-5. corrects that width for the lens blur, which it measures from the marker's own
-   printed edges in the same frame;
-6. reports a distribution per crack with an uncertainty budget, and a schedule you
-   can export as CSV.
-
-And then the part that matters most:
-
-7. **it refuses.** No marker, marker too small, surface too oblique, frame out of
-   focus, exposure clipped, crack finer than the photograph can resolve, or an
-   interval too wide to be useful — each is a named refusal with the reason and the
-   next action, not a number with a shrug.
-
-## Why refusal is the feature
-
-On our first attempt at this problem, a crack-width routine filled an open contour and took the maximum of the
-distance transform. It reported **283 mm for a 0.75 mm crack**, a factor of 380.
-Nothing crashed. Nothing warned. The number looked like a number.
-
-The measured version of the same failure is in [`docs/evaluation.md`](docs/evaluation.md).
-With the resolution gate turned off, reading the full width at half depth — the
-textbook approach — returns **0.31 mm for a 0.20 mm crack**, because below about four
-lens blurs across it is measuring the lens and not the crack. And the corrected
-estimator is wrong there too, by 12% in the other direction: no method recovers a width
-the photograph does not contain. That is why the answer is a refusal with an upper
-bound rather than a cleverer formula.
-
-## Accuracy, in one line
+## Result
 
 Against synthetic targets of known width, across stand-off, viewing angle, defocus,
 lighting and sensor noise, with the default estimator and the default gates:
@@ -76,12 +21,52 @@ lighting and sensor noise, with the default estimator and the default gates:
 | Worst single error | **5.6%** | 0.056 mm |
 | **Stated 95% interval contained the truth** | **98.1%** | against a nominal 95% |
 
-The last row is the one worth looking at: an uncertainty that does not cover the error
-is decoration. The declined readings are counted rather than dropped, and the method,
-the full 1,312-row sweep and the plots are in
-[`docs/evaluation.md`](docs/evaluation.md).
+An uncertainty that does not cover the error is decoration. The declined readings are
+counted rather than dropped, and the method, the full 1,312-row sweep and the plots are
+in [`docs/evaluation.md`](docs/evaluation.md).
 
-## Photos with a ruler instead of the marker
+- **Live endpoint: <https://54-224-119-247.sslip.io>** (AWS Graviton4, `c8g.large`,
+  us-east-1). Three samples are bundled, so it works from a cold start with nothing
+  uploaded. `/version` prints the OpenCV build and the HAL it is running on.
+- **Technical report:** [`docs/report.md`](docs/report.md)
+- **Evaluation, with the numbers:** [`docs/evaluation.md`](docs/evaluation.md)
+- **Architecture diagrams:** [`docs/architecture.md`](docs/architecture.md)
+
+---
+
+## What it does
+
+Tape a printed marker of known size flat on the wall, next to the crack, and walk past
+with a phone. Hairline:
+
+1. reads the clip, scores every frame for focus, and finds the marker;
+2. recovers the plane the marker lies in, and with it the scale in pixels per
+   millimetre, which varies across the frame whenever the camera is not square on;
+3. thresholds each usable frame adaptively, keeps the components that are long, thin
+   and genuinely darker than the surface around them, and cuts crack networks at
+   their junctions so each run is measured separately;
+4. samples the intensity **perpendicular to each crack on the wall**, not perpendicular
+   to it on screen, which under a tilt is a different direction, and reads a width from
+   each profile;
+5. corrects that width for the lens blur, which it measures from the marker's own
+   printed edges in the same frame;
+6. reports a distribution per crack with an uncertainty budget, and a schedule you
+   can export as CSV;
+7. **refuses.** No marker, marker too small, surface too oblique, frame out of
+   focus, exposure clipped, crack finer than the photograph can resolve, or an
+   interval too wide to be useful: each is a named refusal with the reason and the
+   next action, not a number with a shrug.
+
+### Why refusal is the feature
+
+With the resolution gate turned off, reading the full width at half depth (the textbook
+approach) returns **0.31 mm for a 0.20 mm crack**, because below about four lens blurs
+across it is measuring the lens and not the crack. The corrected estimator is 12% wrong
+there too, in the other direction. No method recovers a width the photograph does not
+contain, which is why the answer is a named refusal with an upper bound. The measured
+table is in [`docs/evaluation.md`](docs/evaluation.md) §3.
+
+### Photos with a ruler instead of the marker
 
 Public crack photos never contain Hairline's marker, so on their own they all end in
 `NO_MARKER`. Many inspection photos do have a ruler, gauge card or crack monitor in
@@ -106,12 +91,22 @@ products/hairline/.venv/bin/python -m hairline.cli measure photo.jpg \
   --keep-edge-cracks --segmentation blackhat --expected-width-mm 0.3 --out /tmp/hairline
 ```
 
+## COOL
+
+Hairline's per-frame work, adaptive Gaussian thresholding and contour extraction on a 4K
+frame, is what the Cloud Optimized OpenCV Library accelerates. On a c8g.4xlarge the COOL
+AMI runs that frame 1.11× faster than the stock OpenCV 5.0.0 wheel (68.02 against
+75.25 ms), almost all of it from a 1.73× faster `adaptiveThreshold` (14.18 against
+24.57 ms); `findContours` is 1.00×. The AMI ships OpenCV 4.14.0-pre, so that is a
+comparison of two builds and two versions. See
+[`docs/cool-benchmark.md`](docs/cool-benchmark.md).
+
 ## Pinned dependencies
 
 `opencv-python-headless==5.0.0.93` and nothing that resolves around it.
 `opencv-python` without a pin resolves to 4.14.x, which shipped *after* 5.0.0 and
-would fail the competition's core requirement, so `import visioncore` raises at
-import time on a 4.x wheel and `/version` prints what is actually running.
+would not be OpenCV 5, so `import visioncore` raises at import time on a 4.x wheel and
+`/version` prints what is actually running.
 
 | Package | Version |
 |---|---|
@@ -172,8 +167,7 @@ products/hairline/.venv/bin/python -m pytest products/hairline/tests -q
 **145 tests.** They assert measured millimetres against drawn millimetres with real
 tolerances, check that the stated uncertainty actually covers the error, fire each
 refusal path on a scene built to trigger it, and include a source-level guard that no
-filled contour is ever used to measure a thin feature — the bug that produced 283 mm
-for a 0.75 mm crack is kept executable next to that guard.
+filled contour is ever used to measure a thin feature.
 
 The one to run on its own is the calibration gate:
 
@@ -201,14 +195,13 @@ infra/ecr.sh hairline --context . --dockerfile products/hairline/Dockerfile --ar
 products/hairline/infra/deploy.sh
 ```
 
-This product deploys on **Graviton EC2**, not App Runner, because the Cloud
-Optimized OpenCV Library is an AMI and App Runner has no Arm option. Details, costs
-and every resource created are in [`docs/costs.md`](docs/costs.md).
+This product deploys on **Graviton EC2**, not App Runner, because the Cloud Optimized
+OpenCV Library is an AMI and App Runner has no Arm option.
 
 ## Responsible use, in short
 
 Hairline measures a crack. It does not decide whether a structure is safe, and it
-ships **no crack-width limit from any design code** — the review bands in the
+ships **no crack-width limit from any design code**. The review bands in the
 interface are an operator setting with a default that is explicitly not taken from
 ACI 224R, EN 1992-1-1 or anything else, because we could not verify those numbers
 against a primary source we hold. The longer version is in

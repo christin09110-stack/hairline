@@ -72,7 +72,7 @@
       <div class="rail__row"><span>HAL</span><b id="stat-hal">…</b></div>
       <div class="rail__row"><span>Machine</span><b id="stat-machine">…</b></div>
       <div class="rail__row"><span>Build</span><b id="stat-sha">…</b></div>
-      <div class="rail__row"><span>Frames measured</span><b id="stat-frames">0</b></div>
+      <div class="rail__row" id="stat-frames-row" hidden><span>Frames measured</span><b id="stat-frames">—</b></div>
       <div class="rail__row"><span>Instance</span><b id="stat-instance">…</b></div>
       <div class="rail__row"><span>Calibration</span><b id="stat-calibration">…</b></div>
     </div>
@@ -83,9 +83,8 @@
     <div id="calibration-banner"></div>
     <h1 class="page__title">Crack survey</h1>
     <p class="page__standfirst">
-      Every width below was sampled perpendicular to the crack on the wall, not on the
-      screen, and converted to millimetres through the printed marker. Where the
-      photograph cannot support a number, this report says so and says why.
+      Widths are measured on the wall, not on the screen. Where the photograph cannot
+      support a number, this report says so and says why.
     </p>
 
     <section class="block manual" id="manual-panel" hidden>
@@ -150,7 +149,6 @@
     </section>
 
     <div id="result">
-      <p class="empty">Nothing measured yet. Choose a clip, or run one of the bundled samples.</p>
     </div>
 
     <section class="block" id="evidence-block" hidden>

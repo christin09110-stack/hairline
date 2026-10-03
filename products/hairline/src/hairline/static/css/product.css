@@ -21,17 +21,17 @@
   --rule: #e2dccc;
   --rule-strong: #c9c1ac;
 
-  --ink: #12181d;          /* 17.89:1 on surface */
-  --ink-dim: #5e6670;      /*  5.82:1 on surface */
-  --ink-faint: #8b8578;
+  --ink: #12181d;          /* 17.89:1 on surface, 16.85:1 on ground, 15.43:1 on raised */
+  --ink-dim: #5e6670;      /*  5.82:1 on surface, 5.48:1 on ground, 5.02:1 on raised */
+  --ink-faint: #6a655a;    /*  5.80:1 on surface, 5.46:1 on ground, 5.00:1 on raised */
 
-  --accent: #15618f;       /*  6.69:1 on surface */
+  --accent: #15618f;       /*  6.69:1 on surface; white on accent 6.69:1 */
   --accent-wash: #eaf2f8;
-  --caution: #8a5a06;      /*  5.92:1 on surface */
+  --caution: #8a5a06;      /*  5.92:1 on surface, 5.27:1 on its own wash */
   --caution-wash: #f9f1e0;
-  --signal: #a8321f;       /*  6.69:1 on surface */
+  --signal: #a8321f;       /*  6.69:1 on surface, 5.90:1 on its own wash */
   --signal-wash: #fbeeea;
-  --ok: #2c6247;
+  --ok: #2c6247;           /*  7.13:1 on surface, 6.24:1 on its own wash */
 
   --font-ui: "Barlow", system-ui, -apple-system, sans-serif;
   --font-note: "Barlow Condensed", "Barlow", sans-serif;
