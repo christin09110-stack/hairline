@@ -202,7 +202,7 @@ OpenCV Library is an AMI and App Runner has no Arm option.
 
 Hairline measures a crack. It does not decide whether a structure is safe, and it
 ships **no crack-width limit from any design code**. The review bands in the
-interface are an operator setting with a default that is explicitly not taken from
-ACI 224R, EN 1992-1-1 or anything else, because we could not verify those numbers
-against a primary source we hold. The longer version is in
+interface are an operator setting, and their default is deliberately not taken from
+ACI 224R, EN 1992-1-1 or anything else: we hold no primary copy of those documents,
+and a limit quoted from memory is a confident wrong number. The longer version is in
 [`docs/report.md`](docs/report.md).

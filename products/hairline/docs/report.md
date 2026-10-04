@@ -358,10 +358,9 @@ and the interface ask for a rule measurement of the square, but nothing downstre
 detect the mistake.
 
 **A width is not a diagnosis.** Hairline ships no crack-width limit from any design
-code. We could not verify the numbers in ACI 224R, EN 1992-1-1 or BS 8110 against a
-primary source we hold, and quoting a limit we have not read would be a confident wrong
-number. The review bands are an operator setting, labelled as such in the interface, and
-the default is not taken from any standard.
+code. We hold no primary copy of ACI 224R, EN 1992-1-1 or BS 8110, and a limit quoted
+from memory is a confident wrong number. The review bands are an operator setting,
+labelled as such in the interface, and the default is not taken from any standard.
 
 **The blur estimate reads low below about one pixel, and that matters on video.** On a
 frame rendered with 0.9 px of defocus the estimator returns 0.58 px raw, 0.55 px after

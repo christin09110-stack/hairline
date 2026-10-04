@@ -311,8 +311,8 @@ with real photographs.
 
 **Nothing here tests a printer.** `hairline sheets` writes a calibration target with
 lines from 0.10 to 2.00 mm and prints the width each line has in the file, to the dot.
-Photographing that sheet and running it through the tool is the first real check, and
-we could not do it.
+Photographing that sheet and running the photograph back through the tool is the next
+check, and it is the cheapest item on the list in `report.md` §8.1.
 
 **Nothing here tests a non-coplanar surface.** Every scene has the marker in the same
 plane as the crack. If the card sits on a proud patch, the scale is wrong by the offset
