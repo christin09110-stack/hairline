@@ -3,8 +3,8 @@
 Region **us-east-1**, account **<aws-account-id>**. Everything created by this product is
 tagged `Project=opencv26` and `Product=hairline`.
 
-**Live endpoint: <https://54-224-119-247.sslip.io>** (also plain
-<http://54.224.119.247>). A `c8g.large` — AWS Graviton4 — in us-east-1, instance
+**Live endpoint: <https://98-84-213-192.sslip.io>** (also plain
+<http://98.84.213.192>). A `c8g.large` — AWS Graviton4 — in us-east-1, instance
 `i-0a3a23ae96a63fe64`, running since 2026-09-16 04:11 UTC. **Still running**, which is
 the intention: it is the always-on demo endpoint.
 

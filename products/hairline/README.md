@@ -25,7 +25,7 @@ An uncertainty that does not cover the error is decoration. The declined reading
 counted rather than dropped, and the method, the full 1,312-row sweep and the plots are
 in [`docs/evaluation.md`](docs/evaluation.md).
 
-- **Live endpoint: <https://54-224-119-247.sslip.io>** (AWS Graviton4, `c8g.large`,
+- **Live endpoint: <https://98-84-213-192.sslip.io>** (AWS Graviton4, `c8g.large`,
   us-east-1). Three samples are bundled, so it works from a cold start with nothing
   uploaded. `/version` prints the OpenCV build and the HAL it is running on.
 - **Technical report:** [`docs/report.md`](docs/report.md)
